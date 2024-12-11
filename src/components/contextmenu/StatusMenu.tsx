@@ -1,37 +1,37 @@
-import { Portal } from '../Portal'
-import { ReactNode, useState } from 'react'
-import { ContextMenuTrigger } from '@firefox-devtools/react-contextmenu'
-import { StatusOptions } from '../../types/types'
-import { Menu } from './menu'
+import { Portal } from "../Portal";
+import { ReactNode, useState } from "react";
+import { ContextMenuTrigger } from "@firefox-devtools/react-contextmenu";
+import { StatusOptions } from "../../types/types";
+import { Menu } from "./menu";
 
 interface Props {
-  id: string
-  button: ReactNode
-  className?: string
-  onSelect?: (item: unknown) => void
+  id: string;
+  button: ReactNode;
+  className?: string;
+  onSelect?: (item: unknown) => void;
 }
 export default function StatusMenu({ id, button, className, onSelect }: Props) {
-  const [keyword, setKeyword] = useState(``)
+  const [keyword, setKeyword] = useState(``);
   const handleSelect = (status: string) => {
-    if (onSelect) onSelect(status)
-  }
+    if (onSelect) onSelect(status);
+  };
 
-  let statuses = StatusOptions
+  let statuses = StatusOptions;
   if (keyword !== ``) {
-    const normalizedKeyword = keyword.toLowerCase().trim()
+    const normalizedKeyword = keyword.toLowerCase().trim();
     statuses = statuses.filter(
-      ([_icon, _id, l]) => l.toLowerCase().indexOf(normalizedKeyword) !== -1
-    )
+      ([_icon, _id, l]) => l.toLowerCase().indexOf(normalizedKeyword) !== -1,
+    );
   }
 
-  const options = statuses.map(([Icon, id, label]) => {
+  const options = statuses.map(([svg, id, label]) => {
     return (
       <Menu.Item key={`status-${id}`} onClick={() => handleSelect(id)}>
-        <Icon className="mr-3" />
+        <img src={svg} alt={id} className="mr-3" />
         <div className="flex-1 overflow-hidden">{label}</div>
       </Menu.Item>
-    )
-  })
+    );
+  });
 
   return (
     <>
@@ -52,5 +52,5 @@ export default function StatusMenu({ id, button, className, onSelect }: Props) {
         </Menu>
       </Portal>
     </>
-  )
+  );
 }

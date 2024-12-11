@@ -1,6 +1,6 @@
-import { CSSProperties } from 'react'
-import StatusIcon from '../../components/StatusIcon'
-import { memo } from 'react'
+import { CSSProperties } from "react";
+import StatusIcon from "../../components/StatusIcon";
+import { memo } from "react";
 import {
   Droppable,
   DroppableProvided,
@@ -8,22 +8,22 @@ import {
   Draggable,
   DraggableProvided,
   DraggableStateSnapshot,
-} from 'react-beautiful-dnd'
-import { FixedSizeList as List, areEqual } from 'react-window'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import IssueItem, { itemHeight } from './IssueItem'
-import { Issue } from '../../types/types'
+} from "react-beautiful-dnd";
+import { FixedSizeList as List, areEqual } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
+import IssueItem, { itemHeight } from "./IssueItem";
+import { Issue } from "../../types/types";
 
 interface Props {
-  status: string
-  title: string
-  issues: Array<Issue> | undefined
+  status: string;
+  title: string;
+  issues: Array<Issue> | undefined;
 }
 
-const itemSpacing = 8
+const itemSpacing = 8;
 
 function IssueCol({ title, status, issues = [] }: Props) {
-  const statusIcon = <StatusIcon status={status} />
+  const statusIcon = <StatusIcon status={status} />;
 
   return (
     <div className="flex flex-col flex-shrink-0 mr-3 select-none w-90">
@@ -42,7 +42,7 @@ function IssueCol({ title, status, issues = [] }: Props) {
         type="category"
         mode="virtual"
         renderClone={(provided, snapshot, rubric) => {
-          const issue = issues[rubric.source.index]
+          const issue = issues[rubric.source.index];
           return (
             <IssueItem
               provided={provided}
@@ -51,19 +51,19 @@ function IssueCol({ title, status, issues = [] }: Props) {
               index={rubric.source.index}
               // style={provided.draggableProps.style}
             />
-          )
+          );
         }}
       >
         {(
           droppableProvided: DroppableProvided,
-          snapshot: DroppableStateSnapshot
+          snapshot: DroppableStateSnapshot,
         ) => {
           // Add an extra item to our list to make space for a dragging item
           // Usually the DroppableProvided.placeholder does this, but that won't
           // work in a virtual list
           const itemCount: number = snapshot.isUsingPlaceholder
             ? issues.length + 1
-            : issues.length
+            : issues.length;
 
           return (
             <div className="grow">
@@ -85,11 +85,11 @@ function IssueCol({ title, status, issues = [] }: Props) {
                 )}
               </AutoSizer>
             </div>
-          )
+          );
         }}
       </Droppable>
     </div>
-  )
+  );
 }
 
 const Row = memo(
@@ -98,12 +98,12 @@ const Row = memo(
     index,
     style,
   }: {
-    data: Issue[]
-    index: number
-    style: CSSProperties | undefined
+    data: Issue[];
+    index: number;
+    style: CSSProperties | undefined;
   }) => {
-    const issue = issues[index]
-    if (!issue) return null
+    const issue = issues[index];
+    if (!issue) return null;
     return (
       <Draggable draggableId={issue.id} index={index} key={issue.id}>
         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
@@ -116,9 +116,9 @@ const Row = memo(
           />
         )}
       </Draggable>
-    )
+    );
   },
-  areEqual
-)
+  areEqual,
+);
 
-export default memo(IssueCol)
+export default memo(IssueCol);

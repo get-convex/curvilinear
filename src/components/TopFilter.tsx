@@ -1,17 +1,17 @@
-import { ReactComponent as MenuIcon } from '../assets/icons/menu.svg'
-import { useState, useContext } from 'react'
-import { BsSortUp, BsPlus, BsX, BsSearch as SearchIcon } from 'react-icons/bs'
-import ViewOptionMenu from './ViewOptionMenu'
-import { MenuContext } from '../App'
-import FilterMenu from './contextmenu/FilterMenu'
-import { useFilterState } from '../utils/filterState'
-import { Issue, PriorityDisplay, StatusDisplay } from '../types/types'
+import MenuIconImg from "../assets/icons/menu.svg";
+import { useState, useContext } from "react";
+import { BsSortUp, BsPlus, BsX, BsSearch as SearchIcon } from "react-icons/bs";
+import ViewOptionMenu from "./ViewOptionMenu";
+import { MenuContext } from "../App";
+import FilterMenu from "./contextmenu/FilterMenu";
+import { useFilterState } from "../utils/filterState";
+import { Issue, PriorityDisplay, StatusDisplay } from "../types/types";
 
 interface Props {
-  issues: Issue[]
-  hideSort?: boolean
-  showSearch?: boolean
-  title?: string
+  issues: Issue[];
+  hideSort?: boolean;
+  showSearch?: boolean;
+  title?: string;
 }
 
 export default function ({
@@ -20,41 +20,41 @@ export default function ({
   showSearch,
   title = `All issues`,
 }: Props) {
-  const [filterState, setFilterState] = useFilterState()
-  const [showViewOption, setShowViewOption] = useState(false)
-  const { showMenu, setShowMenu } = useContext(MenuContext)!
-  const [searchQuery, setSearchQuery] = useState(``)
+  const [filterState, setFilterState] = useFilterState();
+  const [showViewOption, setShowViewOption] = useState(false);
+  const { showMenu, setShowMenu } = useContext(MenuContext)!;
+  const [searchQuery, setSearchQuery] = useState(``);
 
-  // TODO: get total issues count
-  const totalIssuesCount: number = 0
+  // XXX: get total issues count
+  const totalIssuesCount: number = 10;
 
-  const filteredIssuesCount = issues.length
+  const filteredIssuesCount = issues.length;
 
   const handleSearchInner = (query: string) => {
     setFilterState({
       ...filterState,
       query: query,
-    })
-  }
+    });
+  };
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query)
-    handleSearchInner(query)
-  }
+    setSearchQuery(query);
+    handleSearchInner(query);
+  };
 
   const eqStatuses = (statuses: string[]) => {
-    const statusSet = new Set(statuses)
+    const statusSet = new Set(statuses);
     return (
       filterState.status?.length === statusSet.size &&
       filterState.status.every((x) => statusSet.has(x))
-    )
-  }
+    );
+  };
 
   if (filterState.status?.length) {
     if (eqStatuses([`backlog`])) {
-      title = `Backlog`
+      title = `Backlog`;
     } else if (eqStatuses([`todo`, `in_progress`])) {
-      title = `Active`
+      title = `Active`;
     }
   }
 
@@ -67,7 +67,11 @@ export default function ({
             className="flex-shrink-0 h-full px-5 lg:hidden"
             onClick={() => setShowMenu(!showMenu)}
           >
-            <MenuIcon className="w-3.5 text-gray-500 hover:text-gray-800" />
+            <img
+              src={MenuIconImg}
+              alt="Menu"
+              className="w-3.5 text-gray-500 hover:text-gray-800"
+            />
           </button>
 
           <div className="p-1 font-semibold me-1">{title}</div>
@@ -117,7 +121,7 @@ export default function ({
                   setFilterState({
                     ...filterState,
                     priority: undefined,
-                  })
+                  });
                 }}
               >
                 <BsX size={16} />
@@ -138,7 +142,7 @@ export default function ({
                   setFilterState({
                     ...filterState,
                     status: undefined,
-                  })
+                  });
                 }}
               >
                 <BsX size={16} />
@@ -165,5 +169,5 @@ export default function ({
         onDismiss={() => setShowViewOption(false)}
       />
     </>
-  )
+  );
 }

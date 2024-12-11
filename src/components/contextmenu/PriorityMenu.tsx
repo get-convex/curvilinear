@@ -1,15 +1,15 @@
-import { Portal } from '../Portal'
-import { ReactNode, useState } from 'react'
-import { ContextMenuTrigger } from '@firefox-devtools/react-contextmenu'
-import { Menu } from './menu'
-import { PriorityOptions } from '../../types/types'
+import { Portal } from "../Portal";
+import { ReactNode, useState } from "react";
+import { ContextMenuTrigger } from "@firefox-devtools/react-contextmenu";
+import { Menu } from "./menu";
+import { PriorityOptions } from "../../types/types";
 
 interface Props {
-  id: string
-  button: ReactNode
-  filterKeyword?: boolean
-  className?: string
-  onSelect?: (item: string) => void
+  id: string;
+  button: ReactNode;
+  filterKeyword?: boolean;
+  className?: string;
+  onSelect?: (item: string) => void;
 }
 
 function PriorityMenu({
@@ -19,31 +19,31 @@ function PriorityMenu({
   className,
   onSelect,
 }: Props) {
-  const [keyword, setKeyword] = useState(``)
+  const [keyword, setKeyword] = useState(``);
 
   const handleSelect = (priority: string) => {
-    setKeyword(``)
-    if (onSelect) onSelect(priority)
-  }
-  let statusOpts = PriorityOptions
+    setKeyword(``);
+    if (onSelect) onSelect(priority);
+  };
+  let statusOpts = PriorityOptions;
   if (keyword !== ``) {
-    const normalizedKeyword = keyword.toLowerCase().trim()
+    const normalizedKeyword = keyword.toLowerCase().trim();
     statusOpts = statusOpts.filter(
       ([_Icon, _priority, label]) =>
-        (label as string).toLowerCase().indexOf(normalizedKeyword) !== -1
-    )
+        (label as string).toLowerCase().indexOf(normalizedKeyword) !== -1,
+    );
   }
 
-  const options = statusOpts.map(([Icon, priority, label], idx) => {
+  const options = statusOpts.map(([svg, priority, label], idx) => {
     return (
       <Menu.Item
         key={`priority-${idx}`}
         onClick={() => handleSelect(priority as string)}
       >
-        <Icon className="mr-3" /> <span>{label}</span>
+        <img src={svg} className="mr-3" /> <span>{label}</span>
       </Menu.Item>
-    )
-  })
+    );
+  });
 
   return (
     <>
@@ -64,7 +64,7 @@ function PriorityMenu({
         </Menu>
       </Portal>
     </>
-  )
+  );
 }
 
-export default PriorityMenu
+export default PriorityMenu;

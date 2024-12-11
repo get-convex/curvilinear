@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify";
 
 export function showWarning(msg: string, title: string = ``) {
   //TODO: make notification showing from bottom
@@ -18,10 +18,10 @@ export function showWarning(msg: string, title: string = ``) {
       )}
       <div className="w-full mt-2 text-xs font-normal text-gray-500">{msg}</div>
     </div>
-  )
+  );
   toast(content, {
     position: `bottom-right`,
-  })
+  });
 }
 
 export function showInfo(msg: string, title: string = ``) {
@@ -42,8 +42,8 @@ export function showInfo(msg: string, title: string = ``) {
       )}
       <div className="w-full mt-2 text-xs font-normal text-gray-500">{msg}</div>
     </div>
-  )
+  );
   toast(content, {
     position: `bottom-right`,
-  })
+  });
 }

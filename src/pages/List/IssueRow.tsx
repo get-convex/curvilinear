@@ -1,25 +1,23 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import type { CSSProperties } from 'react'
-import PriorityMenu from '../../components/contextmenu/PriorityMenu'
-import StatusMenu from '../../components/contextmenu/StatusMenu'
-import PriorityIcon from '../../components/PriorityIcon'
-import StatusIcon from '../../components/StatusIcon'
-import Avatar from '../../components/Avatar'
-import { memo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { formatDate } from '../../utils/date'
-import { Issue } from '../../types/types'
+import type { CSSProperties } from "react";
+import PriorityMenu from "../../components/contextmenu/PriorityMenu";
+import StatusMenu from "../../components/contextmenu/StatusMenu";
+import PriorityIcon from "../../components/PriorityIcon";
+import StatusIcon from "../../components/StatusIcon";
+import Avatar from "../../components/Avatar";
+import { memo } from "react";
+import { useNavigate } from "react-router-dom";
+import { formatDate } from "../../utils/date";
+import { Issue } from "../../types/types";
 
 interface Props {
-  issue: Issue
-  style: CSSProperties
+  issue: Issue;
+  style: CSSProperties;
 }
 
 function IssueRow({ issue, style }: Props) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleChangeStatus = (_status: string) => {
+  const handleChangeStatus = (_status: any) => {
     // db.issue.update({
     //   data: {
     //     status: status,
@@ -29,7 +27,7 @@ function IssueRow({ issue, style }: Props) {
     //     id: issue.id,
     //   },
     // })
-  }
+  };
 
   const handleChangePriority = (_priority: string) => {
     // db.issue.update({
@@ -41,7 +39,7 @@ function IssueRow({ issue, style }: Props) {
     //     id: issue.id,
     //   },
     // })
-  }
+  };
 
   return (
     <div
@@ -75,7 +73,7 @@ function IssueRow({ issue, style }: Props) {
         <Avatar name={issue.username} />
       </div>
     </div>
-  )
+  );
 }
 
-export default memo(IssueRow)
+export default memo(IssueRow);

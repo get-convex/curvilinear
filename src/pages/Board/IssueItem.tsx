@@ -1,40 +1,40 @@
-import { memo, type CSSProperties } from 'react'
-import classNames from 'classnames'
-import { useNavigate } from 'react-router-dom'
-import { DraggableProvided } from 'react-beautiful-dnd'
-import Avatar from '../../components/Avatar'
-import PriorityMenu from '../../components/contextmenu/PriorityMenu'
-import PriorityIcon from '../../components/PriorityIcon'
-import { Issue } from '../../types/types'
+import { memo, type CSSProperties } from "react";
+import classNames from "classnames";
+import { useNavigate } from "react-router-dom";
+import { DraggableProvided } from "react-beautiful-dnd";
+import Avatar from "../../components/Avatar";
+import PriorityMenu from "../../components/contextmenu/PriorityMenu";
+import PriorityIcon from "../../components/PriorityIcon";
+import { Issue } from "../../types/types";
 
 interface IssueProps {
-  issue: Issue
-  index: number
-  isDragging?: boolean
-  provided: DraggableProvided
-  style?: CSSProperties
+  issue: Issue;
+  index: number;
+  isDragging?: boolean;
+  provided: DraggableProvided;
+  style?: CSSProperties;
 }
 
-export const itemHeight = 100
+export const itemHeight = 100;
 
 function getStyle(
   provided: DraggableProvided,
-  style?: CSSProperties
+  style?: CSSProperties,
 ): CSSProperties {
   return {
     ...provided.draggableProps.style,
     ...(style || {}),
     height: `${itemHeight}px`,
-  }
+  };
 }
 
 const IssueItem = ({ issue, style, isDragging, provided }: IssueProps) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const priorityIcon = (
     <span className="inline-block m-0.5 rounded-sm border border-gray-100 hover:border-gray-200 p-0.5">
       <PriorityIcon priority={issue.priority} />
     </span>
-  )
+  );
 
   // const updatePriority = (priority: string) => {
   //   db.issue.update({
@@ -54,8 +54,8 @@ const IssueItem = ({ issue, style, isDragging, provided }: IssueProps) => {
       className={classNames(
         `cursor-default flex flex-col w-full px-4 py-3 mb-2 bg-white rounded focus:outline-none`,
         {
-          'shadow-modal': isDragging,
-        }
+          "shadow-modal": isDragging,
+        },
       )}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
@@ -81,7 +81,7 @@ const IssueItem = ({ issue, style, isDragging, provided }: IssueProps) => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default memo(IssueItem)
+export default memo(IssueItem);

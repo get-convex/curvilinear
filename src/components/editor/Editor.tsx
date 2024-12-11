@@ -3,22 +3,22 @@ import {
   EditorContent,
   BubbleMenu,
   type Extensions,
-} from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Placeholder from '@tiptap/extension-placeholder'
-import Table from '@tiptap/extension-table'
-import TableCell from '@tiptap/extension-table-cell'
-import TableHeader from '@tiptap/extension-table-header'
-import TableRow from '@tiptap/extension-table-row'
-import { Markdown } from 'tiptap-markdown'
-import EditorMenu from './EditorMenu'
-import { useEffect, useRef } from 'react'
+} from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
+import Table from "@tiptap/extension-table";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import TableRow from "@tiptap/extension-table-row";
+import { Markdown } from "tiptap-markdown";
+import EditorMenu from "./EditorMenu";
+import { useEffect, useRef } from "react";
 
 interface EditorProps {
-  value: string
-  onChange: (value: string) => void
-  className?: string
-  placeholder?: string
+  value: string;
+  onChange: (value: string) => void;
+  className?: string;
+  placeholder?: string;
 }
 
 const Editor = ({
@@ -31,8 +31,8 @@ const Editor = ({
     attributes: {
       class: className,
     },
-  }
-  const markdownValue = useRef<string | null>(null)
+  };
+  const markdownValue = useRef<string | null>(null);
 
   const extensions: Extensions = [
     StarterKit,
@@ -41,30 +41,30 @@ const Editor = ({
     TableRow,
     TableHeader,
     TableCell,
-  ]
+  ];
 
   const editor = useEditor({
     extensions,
     editorProps,
     content: value || undefined,
     onUpdate: ({ editor }) => {
-      markdownValue.current = editor.storage.markdown.getMarkdown()
-      onChange(markdownValue.current || ``)
+      markdownValue.current = editor.storage.markdown.getMarkdown();
+      onChange(markdownValue.current || ``);
     },
-  })
+  });
 
   useEffect(() => {
     if (editor && markdownValue.current !== value) {
-      editor.commands.setContent(value)
+      editor.commands.setContent(value);
     }
-  }, [value])
+  }, [value]);
 
   if (placeholder) {
     extensions.push(
       Placeholder.configure({
         placeholder,
-      })
-    )
+      }),
+    );
   }
 
   return (
@@ -76,7 +76,7 @@ const Editor = ({
         </BubbleMenu>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Editor
+export default Editor;

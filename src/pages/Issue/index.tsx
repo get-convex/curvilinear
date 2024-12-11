@@ -1,59 +1,57 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import { useParams, useNavigate } from 'react-router-dom'
-import { useState, useRef } from 'react'
-import { BsTrash3 as DeleteIcon } from 'react-icons/bs'
-import { BsXLg as CloseIcon } from 'react-icons/bs'
-import PriorityMenu from '../../components/contextmenu/PriorityMenu'
-import StatusMenu from '../../components/contextmenu/StatusMenu'
-import PriorityIcon from '../../components/PriorityIcon'
-import StatusIcon from '../../components/StatusIcon'
-import Avatar from '../../components/Avatar'
-import { Issue, PriorityDisplay, StatusDisplay } from '../../types/types'
-import Editor from '../../components/editor/Editor'
-import DeleteModal from './DeleteModal'
-import Comments from './Comments'
-import debounce from 'lodash.debounce'
-// import { useShape } from '@electric-sql/react'
-// import { issueShape } from '../../shapes'
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useRef } from "react";
+import { BsTrash3 as DeleteIcon } from "react-icons/bs";
+import { BsXLg as CloseIcon } from "react-icons/bs";
+import PriorityMenu from "../../components/contextmenu/PriorityMenu";
+import StatusMenu from "../../components/contextmenu/StatusMenu";
+import PriorityIcon from "../../components/PriorityIcon";
+import StatusIcon from "../../components/StatusIcon";
+import Avatar from "../../components/Avatar";
+import { Issue, PriorityDisplay, StatusDisplay } from "../../types/types";
+import Editor from "../../components/editor/Editor";
+import DeleteModal from "./DeleteModal";
+import Comments from "./Comments";
+import debounce from "lodash.debounce";
 
-const debounceTime = 500
+const debounceTime = 500;
 
 function IssuePage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
+  // XXX: Load issues here.
   // const issues = useShape<Issue>(issueShape)
-  const issues = [] as Issue[];
+  const issues = { data: [] as Issue[] };
 
-  const params = useParams()
+  const params = useParams();
 
-  const issue = issues.data.find((i) => i.id === params.id)!
+  const issue = issues.data.find((i) => i.id === params.id)!;
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const [dirtyTitle, setDirtyTitle] = useState<string | null>(null)
-  const titleIsDirty = useRef(false)
-  const [dirtyDescription, setDirtyDescription] = useState<string | null>(null)
-  const descriptionIsDirty = useRef(false)
+  const [dirtyTitle, setDirtyTitle] = useState<string | null>(null);
+  const titleIsDirty = useRef(false);
+  const [dirtyDescription, setDirtyDescription] = useState<string | null>(null);
+  const descriptionIsDirty = useRef(false);
 
-  if (issue === undefined) {
-    return <div className="p-8 w-full text-center">Loading...</div>
-  } else if (issue === null) {
-    return <div className="p-8 w-full text-center">Issue not found</div>
+  /// XXX: Handle loading state here.
+  if (issue === ("loading" as any)) {
+    return <div className="p-8 w-full text-center">Loading...</div>;
+  } else if (!issue) {
+    return <div className="p-8 w-full text-center">Issue not found</div>;
   }
 
   // We check if the dirty title or description is the same as the actual title or
   // description, and if so, we can switch back to the non-dirty version
   if (dirtyTitle === issue.title) {
-    setDirtyTitle(null)
-    titleIsDirty.current = false
+    setDirtyTitle(null);
+    titleIsDirty.current = false;
   }
   if (dirtyDescription === issue.description) {
-    setDirtyDescription(null)
-    descriptionIsDirty.current = false
+    setDirtyDescription(null);
+    descriptionIsDirty.current = false;
   }
 
-  const handleStatusChange = (_status: string) => {
+  const handleStatusChange = (_status: any) => {
     // db.issue.update({
     //   data: {
     //     status: status,
@@ -63,7 +61,7 @@ function IssuePage() {
     //     id: issue.id,
     //   },
     // })
-  }
+  };
 
   const handlePriorityChange = (_priority: string) => {
     // db.issue.update({
@@ -75,7 +73,7 @@ function IssuePage() {
     //     id: issue.id,
     //   },
     // })
-  }
+  };
 
   const handleTitleChangeDebounced = debounce(async (_title: string) => {
     // await db.issue.update({
@@ -89,14 +87,14 @@ function IssuePage() {
     // })
     // We can't set titleIsDirty.current = false here because we haven't yet received
     // the updated issue from the db
-  }, debounceTime)
+  }, debounceTime);
 
   const handleTitleChange = (title: string) => {
-    setDirtyTitle(title)
-    titleIsDirty.current = true
+    setDirtyTitle(title);
+    titleIsDirty.current = true;
     // We debounce the title change so that we don't spam the db with updates
-    handleTitleChangeDebounced(title)
-  }
+    handleTitleChangeDebounced(title);
+  };
 
   const handleDescriptionChangeDebounced = debounce(
     async (_description: string) => {
@@ -112,15 +110,15 @@ function IssuePage() {
       // We can't set descriptionIsDirty.current = false here because we haven't yet received
       // the updated issue from the db
     },
-    debounceTime
-  )
+    debounceTime,
+  );
 
   const handleDescriptionChange = (description: string) => {
-    setDirtyDescription(description)
-    descriptionIsDirty.current = true
+    setDirtyDescription(description);
+    descriptionIsDirty.current = true;
     // We debounce the description change so that we don't spam the db with updates
-    handleDescriptionChangeDebounced(description)
-  }
+    handleDescriptionChangeDebounced(description);
+  };
 
   const handleDelete = () => {
     // db.comment.deleteMany({
@@ -133,23 +131,23 @@ function IssuePage() {
     //     id: issue.id,
     //   },
     // })
-    handleClose()
-  }
+    handleClose();
+  };
 
   const handleClose = () => {
     if (window.history.length > 2) {
-      navigate(-1)
+      navigate(-1);
     }
-    navigate(`/`)
-  }
+    navigate(`/`);
+  };
 
   const shortId = () => {
     if (issue.id.includes(`-`)) {
-      return issue.id.slice(issue.id.length - 8)
+      return issue.id.slice(issue.id.length - 8);
     } else {
-      return issue.id
+      return issue.id;
     }
-  }
+  };
 
   return (
     <>
@@ -269,7 +267,7 @@ function IssuePage() {
         deleteIssue={handleDelete}
       />
     </>
-  )
+  );
 }
 
-export default IssuePage
+export default IssuePage;

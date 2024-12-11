@@ -1,3 +1,4 @@
+// XXX: Merge in auth.
 // import { SignInButton } from "@clerk/clerk-react";
 // import {
 //   Authenticated,
@@ -24,61 +25,95 @@
 //   );
 // }
 
-import 'animate.css/animate.min.css'
-import Board from './pages/Board'
-import { useState, createContext } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import 'react-toastify/dist/ReactToastify.css'
-import List from './pages/List'
-import Root from './pages/root'
-import Issue from './pages/Issue'
+import "animate.css/animate.min.css";
+import Board from "./pages/Board";
+import { useState, createContext } from "react";
+import {
+  createBrowserRouter,
+  isRouteErrorResponse,
+  RouterProvider,
+} from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import List from "./pages/List";
+import Root from "./pages/root";
+import Issue from "./pages/Issue";
 
 interface MenuContextInterface {
-  showMenu: boolean
-  setShowMenu: (show: boolean) => void
+  showMenu: boolean;
+  setShowMenu: (show: boolean) => void;
 }
 
-export const MenuContext = createContext(null as MenuContextInterface | null)
+export const MenuContext = createContext(null as MenuContextInterface | null);
 
 const router = createBrowserRouter([
   {
     path: `/`,
     element: <Root />,
     loader: async () => {
-      console.time(`preload`)
-      // await preloadShape(issueShape)
-      console.timeEnd(`preload`)
-      return null
+      console.time(`preload`);
+      // XXX: Preload all relevant data here.
+      console.timeEnd(`preload`);
+      return null;
     },
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         path: `/`,
         element: <List />,
+        errorElement: <RouteErrorBoundary />,
       },
       {
         path: `/search`,
         element: <List showSearch={true} />,
+        errorElement: <RouteErrorBoundary />,
       },
       {
         path: `/board`,
         element: <Board />,
+        errorElement: <RouteErrorBoundary />,
       },
       {
         path: `/issue/:id`,
         element: <Issue />,
+        errorElement: <RouteErrorBoundary />,
       },
     ],
   },
-])
+]);
 
 const App = () => {
-  const [showMenu, setShowMenu] = useState(false)
+  const [showMenu, setShowMenu] = useState(false);
 
   return (
     <MenuContext.Provider value={{ showMenu, setShowMenu }}>
       <RouterProvider router={router} />
     </MenuContext.Provider>
-  )
-}
+  );
+};
 
-export default App
+export default App;
+
+function RouteErrorBoundary({ error }: any) {
+  console.log(error);
+  if (isRouteErrorResponse(error)) {
+    return (
+      <>
+        <h1>
+          {error.status} {error.statusText}
+        </h1>
+        <p>{error.data}</p>
+      </>
+    );
+  } else if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  } else {
+    return <h1>Unknown Error</h1>;
+  }
+}

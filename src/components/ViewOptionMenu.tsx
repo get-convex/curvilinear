@@ -1,36 +1,36 @@
-import { Transition } from '@headlessui/react'
-import { useClickOutside } from '../hooks/useClickOutside'
-import { useRef } from 'react'
-import Select from './Select'
-import { useFilterState } from '../utils/filterState'
+import { Transition } from "@headlessui/react";
+import { useClickOutside } from "../hooks/useClickOutside";
+import { useRef } from "react";
+import Select from "./Select";
+import { useFilterState } from "../utils/filterState";
 
 interface Props {
-  isOpen: boolean
-  onDismiss?: () => void
+  isOpen: boolean;
+  onDismiss?: () => void;
 }
 export default function ({ isOpen, onDismiss }: Props) {
-  const ref = useRef(null)
-  const [filterState, setFilterState] = useFilterState()
+  const ref = useRef(null);
+  const [filterState, setFilterState] = useFilterState();
 
   useClickOutside(ref, () => {
-    if (isOpen && onDismiss) onDismiss()
-  })
+    if (isOpen && onDismiss) onDismiss();
+  });
 
   const handleOrderByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilterState({
       ...filterState,
       orderBy: e.target.value,
-    })
-  }
+    });
+  };
 
   const handleOrderDirectionChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
+    e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setFilterState({
       ...filterState,
       orderDirection: e.target.value as `asc` | `desc`,
-    })
-  }
+    });
+  };
 
   return (
     <div ref={ref}>
@@ -88,5 +88,5 @@ export default function ({ isOpen, onDismiss }: Props) {
         </div>
       </Transition>
     </div>
-  )
+  );
 }

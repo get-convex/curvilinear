@@ -1,14 +1,14 @@
-import { Transition } from '@headlessui/react'
-import { useRef } from 'react'
-import classnames from 'classnames'
-import { useClickOutside } from '../hooks/useClickOutside'
-import Toggle from './Toggle'
+import { Transition } from "@headlessui/react";
+import { useRef } from "react";
+import classnames from "classnames";
+import { useClickOutside } from "../hooks/useClickOutside";
+import Toggle from "./Toggle";
 
 interface Props {
-  isOpen: boolean
-  onDismiss?: () => void
-  setShowAboutModal?: (show: boolean) => void
-  className?: string
+  isOpen: boolean;
+  onDismiss?: () => void;
+  setShowAboutModal?: (show: boolean) => void;
+  className?: string;
 }
 export default function ProfileMenu({
   isOpen,
@@ -16,17 +16,17 @@ export default function ProfileMenu({
   onDismiss,
   setShowAboutModal,
 }: Props) {
-  const connectivityState = { status: `disconnected` }
+  const connectivityState = { status: `disconnected` };
   const classes = classnames(
     `select-none w-53 shadow-modal z-50 flex flex-col py-1 bg-white font-normal rounded text-gray-800`,
-    className
-  )
-  const ref = useRef(null)
+    className,
+  );
+  const ref = useRef(null);
 
-  const connectivityConnected = connectivityState.status !== `disconnected`
+  const connectivityConnected = connectivityState.status !== `disconnected`;
   const connectivityStateDisplay =
     connectivityState.status[0].toUpperCase() +
-    connectivityState.status.slice(1)
+    connectivityState.status.slice(1);
 
   // const toggleConnectivityState = () => {
   //   if (connectivityConnected) {
@@ -38,9 +38,9 @@ export default function ProfileMenu({
 
   useClickOutside(ref, () => {
     if (isOpen && onDismiss) {
-      onDismiss()
+      onDismiss();
     }
-  })
+  });
 
   return (
     <div ref={ref}>
@@ -57,26 +57,26 @@ export default function ProfileMenu({
         <button
           className="flex items-center h-8 px-3 hover:bg-gray-100"
           onClick={() => {
-            setShowAboutModal?.(true)
-            onDismiss?.()
+            setShowAboutModal?.(true);
+            onDismiss?.();
           }}
         >
           About
         </button>
         <a
-          href="https://www.electric-sql.com"
+          href="https://www.convex.dev"
           className="flex items-center h-8 px-3 hover:bg-gray-100"
         >
-          Visit ElectricSQL
+          Visit Convex
         </a>
         <a
-          href="https://www.electric-sql.com/docs"
+          href="https://www.convex.dev//docs"
           className="flex items-center h-8 px-3 hover:bg-gray-100"
         >
           Documentation
         </a>
         <a
-          href="https://github.com/electric-sql/electric/tree/main/examples/linearlite"
+          href="https://github.com/get-convex/convex"
           className="flex items-center h-8 px-3 hover:bg-gray-100"
         >
           GitHub
@@ -94,5 +94,5 @@ export default function ProfileMenu({
         </div>
       </Transition>
     </div>
-  )
+  );
 }

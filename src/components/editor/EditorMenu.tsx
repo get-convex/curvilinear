@@ -1,17 +1,17 @@
-import type { Editor as TipTapEditor } from '@tiptap/react'
-import classNames from 'classnames'
+import type { Editor as TipTapEditor } from "@tiptap/react";
+import classNames from "classnames";
 
-import { BsTypeBold as BoldIcon } from 'react-icons/bs'
-import { BsTypeItalic as ItalicIcon } from 'react-icons/bs'
-import { BsTypeStrikethrough as StrikeIcon } from 'react-icons/bs'
-import { BsCode as CodeIcon } from 'react-icons/bs'
-import { BsListUl as BulletListIcon } from 'react-icons/bs'
-import { BsListOl as OrderedListIcon } from 'react-icons/bs'
-import { BsCodeSlash as CodeBlockIcon } from 'react-icons/bs'
-import { BsChatQuote as BlockquoteIcon } from 'react-icons/bs'
+import { BsTypeBold as BoldIcon } from "react-icons/bs";
+import { BsTypeItalic as ItalicIcon } from "react-icons/bs";
+import { BsTypeStrikethrough as StrikeIcon } from "react-icons/bs";
+import { BsCode as CodeIcon } from "react-icons/bs";
+import { BsListUl as BulletListIcon } from "react-icons/bs";
+import { BsListOl as OrderedListIcon } from "react-icons/bs";
+import { BsCodeSlash as CodeBlockIcon } from "react-icons/bs";
+import { BsChatQuote as BlockquoteIcon } from "react-icons/bs";
 
 export interface EditorMenuProps {
-  editor: TipTapEditor
+  editor: TipTapEditor;
 }
 
 const EditorMenu = ({ editor }: EditorMenuProps) => {
@@ -23,8 +23,8 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
         className={classNames(
           `me-1 px-1 rounded color text-gray-500 hover:text-black`,
           {
-            'bg-gray-100': editor.isActive(`bold`),
-          }
+            "bg-gray-100": editor.isActive(`bold`),
+          },
         )}
       >
         <BoldIcon className="w-4 h-4" />
@@ -35,8 +35,8 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
         className={classNames(
           `me-1 px-1 py-1 rounded color text-gray-500 hover:text-black`,
           {
-            'bg-gray-100': editor.isActive(`italic`),
-          }
+            "bg-gray-100": editor.isActive(`italic`),
+          },
         )}
       >
         <ItalicIcon className="w-4 h-4" />
@@ -47,8 +47,8 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
         className={classNames(
           `me-1 px-1 py-1 rounded color text-gray-500 hover:text-black`,
           {
-            'bg-gray-100': editor.isActive(`strike`),
-          }
+            "bg-gray-100": editor.isActive(`strike`),
+          },
         )}
       >
         <StrikeIcon className="w-4 h-4" />
@@ -59,8 +59,8 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
         className={classNames(
           `me-1 px-1 py-1 rounded color text-gray-500 hover:text-black`,
           {
-            'bg-gray-100': editor.isActive(`code`),
-          }
+            "bg-gray-100": editor.isActive(`code`),
+          },
         )}
       >
         <CodeIcon className="w-4 h-4" />
@@ -71,8 +71,8 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
         className={classNames(
           `me-1 px-1 py-1 rounded color text-gray-500 hover:text-black`,
           {
-            'bg-gray-100': editor.isActive(`bulletList`),
-          }
+            "bg-gray-100": editor.isActive(`bulletList`),
+          },
         )}
       >
         <BulletListIcon className="w-4 h-4" />
@@ -82,8 +82,8 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
         className={classNames(
           `me-1 px-1 py-1 rounded color text-gray-500 hover:text-black`,
           {
-            'bg-gray-100': editor.isActive(`orderedList`),
-          }
+            "bg-gray-100": editor.isActive(`orderedList`),
+          },
         )}
       >
         <OrderedListIcon className="w-4 h-4" />
@@ -93,8 +93,8 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
         className={classNames(
           `me-1 px-1 py-1 rounded color text-gray-500 hover:text-black`,
           {
-            'bg-gray-100': editor.isActive(`codeBlock`),
-          }
+            "bg-gray-100": editor.isActive(`codeBlock`),
+          },
         )}
       >
         <CodeBlockIcon className="w-4 h-4" />
@@ -104,14 +104,14 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
         className={classNames(
           `px-1 py-1 rounded color text-gray-500 hover:text-black`,
           {
-            'bg-gray-100': editor.isActive(`blockquote`),
-          }
+            "bg-gray-100": editor.isActive(`blockquote`),
+          },
         )}
       >
         <BlockquoteIcon className="w-4 h-4" />
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default EditorMenu
+export default EditorMenu;

@@ -1,8 +1,8 @@
-import Modal from './Modal'
+import Modal from "./Modal";
 
 interface Props {
-  isOpen: boolean
-  onDismiss?: () => void
+  isOpen: boolean;
+  onDismiss?: () => void;
 }
 
 export default function AboutModal({ isOpen, onDismiss }: Props) {
@@ -16,14 +16,14 @@ export default function AboutModal({ isOpen, onDismiss }: Props) {
           </a>
           {` `}
           built using{` `}
-          <a href="http://electric-sql.com" target="_blank">
-            ElectricSQL
+          <a href="http://www.convex.dev" target="_blank">
+            Convex
           </a>
-          {` `}- the local-first sync layer for web and mobile apps.
+          {` `}.
         </p>
         <p className="my-1">
-          This example is built on top of the excellent clone of the Linear UI
-          built by{` `}
+          This example is built on top of ElectricSQL's fork of the excellent
+          clone of the Linear UI built by{` `}
           <a href="https://github.com/tuan3w" target="_blank">
             Tuan Nguyen
           </a>
@@ -31,13 +31,12 @@ export default function AboutModal({ isOpen, onDismiss }: Props) {
         </p>
         <p className="my-1">
           We have replaced the canned data with a stack running{` `}
-          <a href="https://github.com/electric-sql/electric" target="_blank">
-            Electric
+          <a href="https://github.com/get-convex/convex" target="_blank">
+            Convex
           </a>
-          {` `}
-          in Docker.
+          .
         </p>
       </div>
     </Modal>
-  )
+  );
 }

@@ -1,32 +1,30 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from "react";
 
-import { BsChevronRight as ChevronRight } from 'react-icons/bs'
-import { ReactComponent as CloseIcon } from '../assets/icons/close.svg'
-import { ReactComponent as ElectricIcon } from '../assets/images/icon.inverse.svg'
+import { BsChevronRight as ChevronRight } from "react-icons/bs";
+import CloseIconImg from "../assets/icons/close.svg";
+import ConvexIconImg from "../assets/images/convex.svg";
 
-import Modal from '../components/Modal'
-import Editor from '../components/editor/Editor'
-import PriorityIcon from './PriorityIcon'
-import StatusIcon from './StatusIcon'
-import PriorityMenu from './contextmenu/PriorityMenu'
-import StatusMenu from './contextmenu/StatusMenu'
+import Modal from "../components/Modal";
+import Editor from "../components/editor/Editor";
+import PriorityIcon from "./PriorityIcon";
+import StatusIcon from "./StatusIcon";
+import PriorityMenu from "./contextmenu/PriorityMenu";
+import StatusMenu from "./contextmenu/StatusMenu";
 
-import { Priority, Status, PriorityDisplay } from '../types/types'
-import { showInfo } from '../utils/notification'
+import { Priority, Status, PriorityDisplay } from "../types/types";
+import { showInfo } from "../utils/notification";
 
 interface Props {
-  isOpen: boolean
-  onDismiss?: () => void
+  isOpen: boolean;
+  onDismiss?: () => void;
 }
 
 function IssueModal({ isOpen, onDismiss }: Props) {
-  const ref = useRef<HTMLInputElement>(null)
-  const [title, setTitle] = useState(``)
-  const [description, setDescription] = useState<string>()
-  const [priority, setPriority] = useState(Priority.NONE)
-  const [status, setStatus] = useState(Status.BACKLOG)
+  const ref = useRef<HTMLInputElement>(null);
+  const [title, setTitle] = useState(``);
+  const [description, setDescription] = useState<string>();
+  const [priority, setPriority] = useState(Priority.NONE);
+  const [status, setStatus] = useState(Status.BACKLOG);
 
   const handleSubmit = async () => {
     // if (title === '') {
@@ -56,32 +54,32 @@ function IssueModal({ isOpen, onDismiss }: Props) {
     //   },
     // })
 
-    if (onDismiss) onDismiss()
-    reset()
-    showInfo(`You created new issue.`, `Issue created`)
-  }
+    if (onDismiss) onDismiss();
+    reset();
+    showInfo(`You created new issue.`, `Issue created`);
+  };
 
   const handleClickCloseBtn = () => {
-    if (onDismiss) onDismiss()
-    reset()
-  }
+    if (onDismiss) onDismiss();
+    reset();
+  };
 
   const reset = () => {
     setTimeout(() => {
-      setTitle(``)
-      setDescription(``)
-      setPriority(Priority.NONE)
-      setStatus(Status.BACKLOG)
-    }, 250)
-  }
+      setTitle(``);
+      setDescription(``);
+      setPriority(Priority.NONE);
+      setStatus(Status.BACKLOG);
+    }, 250);
+  };
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
-        ref.current?.focus()
-      }, 250)
+        ref.current?.focus();
+      }, 250);
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   const body = (
     <div className="flex flex-col w-full py-4 overflow-hidden">
@@ -89,8 +87,12 @@ function IssueModal({ isOpen, onDismiss }: Props) {
       <div className="flex items-center justify-between flex-shrink-0 px-4">
         <div className="flex items-center">
           <span className="inline-flex items-center p-1 px-2 text-gray-400 bg-gray-100 rounded">
-            <ElectricIcon className="w-3 h-3 scale-150 mr-1" />
-            <span>electric</span>
+            <img
+              src={ConvexIconImg}
+              alt="Convex"
+              className="w-3 h-3 scale-150 mr-1"
+            />
+            <span>Convex</span>
           </span>
           <ChevronRight className="ml-1" />
           <span className="ml-1 font-normal text-gray-700">New Issue</span>
@@ -100,7 +102,7 @@ function IssueModal({ isOpen, onDismiss }: Props) {
             className="inline-flex rounded items-center justify-center ml-2 text-gray-500 h-7 w-7 hover:bg-gray-100 rouned hover:text-gray-700"
             onClick={handleClickCloseBtn}
           >
-            <CloseIcon className="w-4" />
+            <img src={CloseIconImg} alt="Close" className="w-4" />
           </button>
         </div>
       </div>
@@ -114,8 +116,8 @@ function IssueModal({ isOpen, onDismiss }: Props) {
                 <StatusIcon status={status} />
               </button>
             }
-            onSelect={(st) => {
-              setStatus(st)
+            onSelect={(st: any) => {
+              setStatus(st);
             }}
           />
           <input
@@ -149,8 +151,8 @@ function IssueModal({ isOpen, onDismiss }: Props) {
             </button>
           }
           onSelect={(val) => {
-            console.log(val)
-            setPriority(val)
+            console.log(val);
+            setPriority(val);
           }}
         />
       </div>
@@ -164,13 +166,13 @@ function IssueModal({ isOpen, onDismiss }: Props) {
         </button>
       </div>
     </div>
-  )
+  );
 
   return (
     <Modal isOpen={isOpen} center={false} size="large" onDismiss={onDismiss}>
       {body}
     </Modal>
-  )
+  );
 }
 
-export default memo(IssueModal)
+export default memo(IssueModal);

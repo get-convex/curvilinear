@@ -1,12 +1,12 @@
-import { CSSProperties } from 'react'
-import { FixedSizeList as List, areEqual } from 'react-window'
-import { memo } from 'react'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import IssueRow from './IssueRow'
-import { Issue } from '../../types/types'
+import { CSSProperties } from "react";
+import { FixedSizeList as List, areEqual } from "react-window";
+import { memo } from "react";
+import AutoSizer from "react-virtualized-auto-sizer";
+import IssueRow from "./IssueRow";
+import { Issue } from "../../types/types";
 
 export interface IssueListProps {
-  issues: Issue[]
+  issues: Issue[];
 }
 
 function IssueList({ issues }: IssueListProps) {
@@ -26,7 +26,7 @@ function IssueList({ issues }: IssueListProps) {
         )}
       </AutoSizer>
     </div>
-  )
+  );
 }
 
 const VirtualIssueRow = memo(
@@ -35,14 +35,14 @@ const VirtualIssueRow = memo(
     index,
     style,
   }: {
-    data: Issue[]
-    index: number
-    style: CSSProperties
+    data: Issue[];
+    index: number;
+    style: CSSProperties;
   }) => {
-    const issue = issues[index]
-    return <IssueRow key={`issue-${issue.id}`} issue={issue} style={style} />
+    const issue = issues[index];
+    return <IssueRow key={`issue-${issue.id}`} issue={issue} style={style} />;
   },
-  areEqual
-)
+  areEqual,
+);
 
-export default IssueList
+export default IssueList;

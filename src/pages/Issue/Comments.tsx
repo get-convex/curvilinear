@@ -1,34 +1,23 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import { useState } from 'react'
-import ReactMarkdown from 'react-markdown'
-import Editor from '../../components/editor/Editor'
-import Avatar from '../../components/Avatar'
-import { formatDate } from '../../utils/date'
-import { showWarning } from '../../utils/notification'
-import { Comment, Issue } from '../../types/types'
-// import { useShape } from '@electric-sql/react'
-import { baseUrl, databaseId, token } from '../../electric'
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import Editor from "../../components/editor/Editor";
+import Avatar from "../../components/Avatar";
+import { formatDate } from "../../utils/date";
+import { showWarning } from "../../utils/notification";
+import { Comment, Issue } from "../../types/types";
 
 export interface CommentsProps {
-  issue: Issue
+  issue: Issue;
 }
 
 function Comments(commentProps: CommentsProps) {
-  const [newCommentBody, setNewCommentBody] = useState<string>(``)
-  // const allComments = useShape({
-  //   url: `${baseUrl}/v1/shape`,
-  //   params: {
-  //     token,
-  //     database_id: databaseId,
-  //     table: `comment`,
-  //   },
-  // })! as Comment[]
-  const allComments = [] as Comment[];
+  const [newCommentBody, setNewCommentBody] = useState<string>(``);
+  // XXX: Load all comments for an issue here.
+  const allComments = { data: [] as Comment[] };
 
   const comments = allComments.data.filter(
-    (c) => c.issue_id === commentProps.issue.id
-  )
+    (c) => c.issue_id === commentProps.issue.id,
+  );
 
   const commentList = () => {
     if (comments && comments.length > 0) {
@@ -50,17 +39,17 @@ function Comments(commentProps: CommentsProps) {
             <ReactMarkdown>{comment.body}</ReactMarkdown>
           </div>
         </div>
-      ))
+      ));
     }
-  }
+  };
 
   const handlePost = () => {
     if (!newCommentBody) {
       showWarning(
         `Please enter a comment before submitting`,
-        `Comment required`
-      )
-      return
+        `Comment required`,
+      );
+      return;
     }
 
     // db.comment.create({
@@ -72,8 +61,8 @@ function Comments(commentProps: CommentsProps) {
     //     username: 'testuser',
     //   },
     // })
-    setNewCommentBody(``)
-  }
+    setNewCommentBody(``);
+  };
 
   return (
     <>
@@ -95,7 +84,7 @@ function Comments(commentProps: CommentsProps) {
         </button>
       </div>
     </>
-  )
+  );
 }
 
-export default Comments
+export default Comments;
