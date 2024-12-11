@@ -49,8 +49,8 @@ function Avatar({ online, showOffline, name, onClick, avatarUrl }: Props) {
     // use name as avatar
     avatar = (
       <div
-        className="flex items-center justify-center w-4.5 text-xxs h-4.5 text-white rounded-full"
-        style={{ backgroundColor: stringToHslColor(name, 50, 50) }}
+        className="flex items-center justify-center w-5 h-5 text-[10px] font-medium text-white rounded-full p-[6px]"
+        style={{ backgroundColor: stringToHslColor(name, 65, 55) }}
       >
         {getAcronym(name)}
       </div>

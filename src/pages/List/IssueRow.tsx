@@ -8,6 +8,8 @@ import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/date";
 import { Issue } from "../../types/types";
+import { api } from "../../../convex/_generated/api";
+import { useMutation } from "convex/react";
 
 interface Props {
   issue: Issue;
@@ -17,28 +19,21 @@ interface Props {
 function IssueRow({ issue, style }: Props) {
   const navigate = useNavigate();
 
-  const handleChangeStatus = (_status: any) => {
-    // db.issue.update({
-    //   data: {
-    //     status: status,
-    //     modified: new Date(),
-    //   },
-    //   where: {
-    //     id: issue.id,
-    //   },
-    // })
+  const changeStatus = useMutation(api.issues.changeStatus);
+  const changePriority = useMutation(api.issues.changePriority);
+
+  const handleChangeStatus = async (status: string) => {
+    await changeStatus({
+      id: issue.id,
+      status,
+    });
   };
 
-  const handleChangePriority = (_priority: string) => {
-    // db.issue.update({
-    //   data: {
-    //     priority: priority,
-    //     modified: new Date(),
-    //   },
-    //   where: {
-    //     id: issue.id,
-    //   },
-    // })
+  const handleChangePriority = async (priority: string) => {
+    await changePriority({
+      id: issue.id,
+      priority,
+    });
   };
 
   return (

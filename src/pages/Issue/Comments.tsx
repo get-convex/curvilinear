@@ -9,6 +9,7 @@ import { useSyncQuery } from "local-store/react/LocalStoreProvider";
 import { loadComments } from "@/queries";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useUser } from "@clerk/clerk-react";
 
 export interface CommentsProps {
   issue: Issue;
@@ -16,6 +17,7 @@ export interface CommentsProps {
 
 function Comments(commentProps: CommentsProps) {
   const [newCommentBody, setNewCommentBody] = useState<string>(``);
+  const { user } = useUser();
 
   const comments: Comment[] | undefined = useSyncQuery(
     loadComments,
@@ -58,12 +60,16 @@ function Comments(commentProps: CommentsProps) {
       );
       return;
     }
+    if (!user || !user.fullName) {
+      showWarning(`Please login to post a comment`, `Login required`);
+      return;
+    }
     await postComment({
       id: crypto.randomUUID(),
       issue_id: commentProps.issue.id,
       body: newCommentBody,
       created_at: Date.now(),
-      username: "testuser",
+      username: user.fullName,
     });
     setNewCommentBody(``);
   };

@@ -18,6 +18,7 @@ import { useSyncQuery } from "local-store/react/LocalStoreProvider";
 import { loadAllIssues } from "@/queries";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { useUser } from "@clerk/clerk-react";
 
 interface Props {
   isOpen: boolean;
@@ -33,13 +34,17 @@ function IssueModal({ isOpen, onDismiss }: Props) {
 
   const issues = useSyncQuery(loadAllIssues, {}, "issueModal:loadAllIssues");
   const createIssue = useMutation(api.issues.createIssue);
+  const { user } = useUser();
 
   const handleSubmit = async () => {
     if (title === "") {
       showWarning("Please enter a title before submitting", "Title required");
       return;
     }
-
+    if (!user || !user.fullName) {
+      showWarning("Please login to create an issue", "Login required");
+      return;
+    }
     const byKanbanOrder = [...issues].sort(
       (a, b) => a.kanbanorder - b.kanbanorder,
     );
@@ -55,11 +60,11 @@ function IssueModal({ isOpen, onDismiss }: Props) {
       modified: now,
       created: now,
       kanbanorder: kanbanorder,
-      username: "testuser",
+      username: user.fullName,
     });
     if (onDismiss) onDismiss();
     reset();
-    showInfo(`You created new issue.`, `Issue created`);
+    showInfo(`You created a new issue.`, `Issue created`);
   };
 
   const handleClickCloseBtn = () => {

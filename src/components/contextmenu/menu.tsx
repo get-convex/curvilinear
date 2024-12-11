@@ -70,6 +70,7 @@ export const Menu = (props: MenuProps) => {
     <ContextMenu
       id={id}
       className={classes}
+      style={{ border: "1px solid rgb(229, 231, 235)", zIndex: 1000 }}
       onShow={() => {
         if (ref.current) ref.current.focus();
       }}

@@ -13,8 +13,8 @@ export const createIssue = mutation({
     kanbanorder: v.string(),
     username: v.string(),
   },
-  handler: async ({ db }, args) => {
-    return db.insert("issues", args);
+  handler: async (ctx, args) => {
+    await ctx.db.insert("issues", args);
   },
 });
 
@@ -63,6 +63,22 @@ export const changeDescription = mutation({
     const issue = await getIssue(db, args.id);
     return db.patch(issue._id, {
       description: args.description,
+      modified: Date.now(),
+    });
+  },
+});
+
+export const changeKanbanOrder = mutation({
+  args: {
+    id: v.string(),
+    status: v.string(),
+    kanbanorder: v.string(),
+  },
+  handler: async ({ db }, args) => {
+    const issue = await getIssue(db, args.id);
+    return db.patch(issue._id, {
+      status: args.status,
+      kanbanorder: args.kanbanorder,
       modified: Date.now(),
     });
   },

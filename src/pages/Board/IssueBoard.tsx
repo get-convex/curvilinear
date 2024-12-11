@@ -3,6 +3,8 @@ import { useMemo, useState, useEffect } from "react";
 import { generateKeyBetween } from "fractional-indexing";
 import { Issue, Status, StatusDisplay } from "../../types/types";
 import IssueCol from "./IssueCol";
+import { api } from "../../../convex/_generated/api";
+import { useMutation } from "convex/react";
 
 export interface IssueBoardProps {
   issues: Issue[];
@@ -17,6 +19,7 @@ interface MovedIssues {
 
 export default function IssueBoard({ issues }: IssueBoardProps) {
   const [movedIssues, setMovedIssues] = useState<MovedIssues>({});
+  const changeKanbanOrder = useMutation(api.issues.changeKanbanOrder);
 
   // Issues are coming from a live query, this may not have updated before we rerender
   // after a drag and drop. So we keep track of moved issues and use that to override
@@ -129,15 +132,11 @@ export default function IssueBoard({ issues }: IssueBoardProps) {
       },
     }));
 
-    // Update the issue in the database
-    // db.issue.update({
-    //   data: {
-    //     kanbanorder: kanbanorder,
-    //   },
-    //   where: {
-    //     id: issue.id,
-    //   },
-    // })
+    void changeKanbanOrder({
+      id: issue.id,
+      kanbanorder: kanbanorder,
+      status: issue.status,
+    });
 
     // Return the new kanbanorder
     return kanbanorder;
@@ -185,17 +184,12 @@ export default function IssueBoard({ issues }: IssueBoardProps) {
           modified,
         },
       }));
-      // Update the issue in the database
-      // db.issue.update({
-      //   data: {
-      //     status: destination.droppableId,
-      //     kanbanorder,
-      //     modified,
-      //   },
-      //   where: {
-      //     id: draggableId,
-      //   },
-      // })
+
+      void changeKanbanOrder({
+        id: draggableId,
+        kanbanorder,
+        status: destination.droppableId,
+      });
     }
   };
 
