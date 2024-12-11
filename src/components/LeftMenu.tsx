@@ -16,8 +16,11 @@ import AboutModal from "./AboutModal";
 import IssueModal from "./IssueModal";
 import ItemGroup from "./ItemGroup";
 import ProfileMenu from "./ProfileMenu";
+import { useUser } from "@clerk/clerk-react";
 
 function LeftMenu() {
+  const { user } = useUser();
+  console.log("user", user);
   const ref = useRef<HTMLDivElement>() as RefObject<HTMLDivElement>;
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
@@ -64,7 +67,8 @@ function LeftMenu() {
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
               >
                 <Avatar
-                  name="CX"
+                  name={user?.fullName || "CX"}
+                  avatarUrl={user?.imageUrl}
                   // XXX: Online indicator.
                   online={true}
                   showOffline={true}

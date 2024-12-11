@@ -187,7 +187,7 @@ function IssuePage() {
                   Opened by
                 </div>
                 <div className="flex flex-[3_0_0]">
-                  <button className="inline-flex items-center h-6 ps-1.5 pe-2 text-gray-500border-none rounded hover:bg-gray-100">
+                  <button className="inline-flex items-center h-6 ps-1.5 pe-2 text-gray-500 border-none rounded hover:bg-gray-100">
                     <Avatar name={issue.username} />
                     <span className="ml-1">{issue.username}</span>
                   </button>
@@ -201,7 +201,7 @@ function IssuePage() {
                   <StatusMenu
                     id={`issue-status-` + issue.id}
                     button={
-                      <button className="inline-flex items-center h-6 px-2 text-gray-500border-none rounded hover:bg-gray-100">
+                      <button className="inline-flex items-center h-6 px-2 text-gray-500 border-none rounded hover:bg-gray-100">
                         <StatusIcon status={issue.status} className="mr-1" />
                         <span>{StatusDisplay[issue.status]}</span>
                       </button>

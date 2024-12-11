@@ -38,7 +38,12 @@ function Avatar({ online, showOffline, name, onClick, avatarUrl }: Props) {
   // create avatar image icon
   if (avatarUrl)
     avatar = (
-      <img src={avatarUrl} alt={name} className="w-4.5 h-4.5 rounded-full" />
+      <img
+        src={avatarUrl}
+        alt={name}
+        className="w-4.5 h-4.5 rounded-full"
+        style={{ width: "20px", height: "20px" }}
+      />
     );
   else if (name !== undefined) {
     // use name as avatar

@@ -3,6 +3,7 @@ import { useRef } from "react";
 import classnames from "classnames";
 import { useClickOutside } from "../hooks/useClickOutside";
 import Toggle from "./Toggle";
+import { SignOutButton } from "@clerk/clerk-react";
 
 interface Props {
   isOpen: boolean;
@@ -81,7 +82,12 @@ export default function ProfileMenu({
         >
           GitHub
         </a>
-        <div className="border-t flex items-center h-8 px-3">
+        <a className="flex items-center h-8 px-3 hover:bg-gray-100">
+          <SignOutButton />
+        </a>
+
+        {/* XXX: Connectivity tester */}
+        {/* <div className="border-t flex items-center h-8 px-3">
           <span className="text-gray-500 me-auto">
             {connectivityStateDisplay}
           </span>
@@ -91,7 +97,7 @@ export default function ProfileMenu({
             activeClass="bg-green-500 hover:bg-green-700"
             activeLabelClass="border-green-500"
           />
-        </div>
+        </div> */}
       </Transition>
     </div>
   );
