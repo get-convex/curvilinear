@@ -1,8 +1,6 @@
 import { v } from "convex/values";
 import { DatabaseReader, mutation } from "./_generated/server";
 
-
-
 export const createIssue = mutation({
   args: {
     id: v.string(),
@@ -22,7 +20,7 @@ export const createIssue = mutation({
     }
     if (identity.name !== args.username) {
       throw new Error("Username does not match logged in user.");
-    }    
+    }
     await ctx.db.insert("issues", args);
   },
 });
@@ -38,7 +36,10 @@ export const changeStatus = mutation({
       throw new Error("Not logged in.");
     }
     const issue = await getIssue(ctx.db, args.id);
-    return ctx.db.patch(issue._id, { status: args.status, modified: Date.now() });
+    return ctx.db.patch(issue._id, {
+      status: args.status,
+      modified: Date.now(),
+    });
   },
 });
 

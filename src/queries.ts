@@ -1,7 +1,12 @@
+import { Issue } from "./types/types";
+
 export function loadAllIssues(ctx: { localDb: any }, args: any) {
-  console.log("loadAllIssues", ctx, args);
-  console.log(ctx);
-  return ctx.localDb.query("issues").withIndex("by_issue_id").take(1000);
+  return ctx.localDb.query("issues").withIndex("by_issue_id").take(100000);
+}
+
+export function getIssueById(ctx: { localDb: any }, id: string) {
+  const issues: Issue[] = loadAllIssues(ctx, {});
+  return issues.find((i) => i.id === id);
 }
 
 export function loadComments(

@@ -4,7 +4,7 @@ import { generateKeyBetween } from "fractional-indexing";
 import { Issue, Status, StatusDisplay } from "../../types/types";
 import IssueCol from "./IssueCol";
 import { api } from "../../../convex/_generated/api";
-import { useMutation } from "convex/react";
+import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
 
 export interface IssueBoardProps {
   issues: Issue[];
@@ -19,7 +19,7 @@ interface MovedIssues {
 
 export default function IssueBoard({ issues }: IssueBoardProps) {
   const [movedIssues, setMovedIssues] = useState<MovedIssues>({});
-  const changeKanbanOrder = useMutation(api.issues.changeKanbanOrder);
+  const client = useLocalStoreClient();
 
   // Issues are coming from a live query, this may not have updated before we rerender
   // after a drag and drop. So we keep track of moved issues and use that to override
@@ -132,11 +132,12 @@ export default function IssueBoard({ issues }: IssueBoardProps) {
       },
     }));
 
-    void changeKanbanOrder({
+    const args = {
       id: issue.id,
       kanbanorder: kanbanorder,
       status: issue.status,
-    });
+    };
+    void client.mutation(api.issues.changeKanbanOrder, args, args);
 
     // Return the new kanbanorder
     return kanbanorder;
@@ -185,11 +186,12 @@ export default function IssueBoard({ issues }: IssueBoardProps) {
         },
       }));
 
-      void changeKanbanOrder({
+      const args = {
         id: draggableId,
         kanbanorder,
         status: destination.droppableId,
-      });
+      };
+      void client.mutation(api.issues.changeKanbanOrder, args, args);
     }
   };
 

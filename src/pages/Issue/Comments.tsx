@@ -5,9 +5,11 @@ import Avatar from "../../components/Avatar";
 import { formatDate } from "../../utils/date";
 import { showWarning } from "../../utils/notification";
 import { Comment, Issue } from "../../types/types";
-import { useSyncQuery } from "local-store/react/LocalStoreProvider";
+import {
+  useLocalStoreClient,
+  useSyncQuery,
+} from "local-store/react/LocalStoreProvider";
 import { loadComments } from "@/queries";
-import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/clerk-react";
 
@@ -26,7 +28,7 @@ function Comments(commentProps: CommentsProps) {
   );
   console.log("comments", comments);
 
-  const postComment = useMutation(api.comments.postComment);
+  const client = useLocalStoreClient();
 
   const commentList = () => {
     if (comments && comments.length > 0) {
@@ -52,7 +54,8 @@ function Comments(commentProps: CommentsProps) {
     }
   };
 
-  const handlePost = async () => {
+  const handlePost = async (event: any) => {
+    event.preventDefault();
     if (!newCommentBody) {
       showWarning(
         `Please enter a comment before submitting`,
@@ -64,35 +67,40 @@ function Comments(commentProps: CommentsProps) {
       showWarning(`Please login to post a comment`, `Login required`);
       return;
     }
-    await postComment({
+    const args = {
       id: crypto.randomUUID(),
       issue_id: commentProps.issue.id,
       body: newCommentBody,
       created_at: Date.now(),
       username: user.fullName,
-    });
-    setNewCommentBody(``);
+    };
+    const promise = client.mutation(api.comments.postComment, args, args);
+    setNewCommentBody("");
+    await promise;
   };
 
   return (
     <>
       {commentList()}
-      <div className="w-full max-w-full mt-2 min-h-14 ">
-        <Editor
-          className="prose font-normal p-3 appearance-none text-md shadow-sm rounded border border-gray-200 editor"
-          value={newCommentBody}
-          onChange={(val) => setNewCommentBody(val)}
-          placeholder="Add a comment..."
-        />
-      </div>
-      <div className="flex w-full py-3">
-        <button
-          className="px-3 ml-auto text-white bg-indigo-600 rounded hover:bg-indigo-700 h-7"
-          onClick={handlePost}
-        >
-          Post Comment
-        </button>
-      </div>
+      <form onSubmit={handlePost}>
+        <div className="w-full max-w-full mt-2 min-h-14 ">
+          <Editor
+            className="prose font-normal p-3 appearance-none text-md shadow-sm rounded border border-gray-200 editor"
+            value={newCommentBody}
+            onChange={(val) => setNewCommentBody(val)}
+            placeholder="Add a comment..."
+          />
+        </div>
+        <div className="flex w-full py-3">
+          <button
+            className="px-3 ml-auto text-white bg-indigo-600 rounded hover:bg-indigo-700 h-7"
+            onClick={handlePost}
+            type="submit"
+          >
+            Post Comment
+          </button>
+        </div>
+      </form>
     </>
   );
 }

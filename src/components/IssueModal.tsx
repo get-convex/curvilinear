@@ -14,9 +14,11 @@ import StatusMenu from "./contextmenu/StatusMenu";
 import { Priority, Status, PriorityDisplay } from "../types/types";
 import { showInfo, showWarning } from "../utils/notification";
 import { generateKeyBetween } from "fractional-indexing";
-import { useSyncQuery } from "local-store/react/LocalStoreProvider";
+import {
+  useLocalStoreClient,
+  useSyncQuery,
+} from "local-store/react/LocalStoreProvider";
 import { loadAllIssues } from "@/queries";
-import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useUser } from "@clerk/clerk-react";
 
@@ -33,7 +35,7 @@ function IssueModal({ isOpen, onDismiss }: Props) {
   const [status, setStatus] = useState(Status.BACKLOG);
 
   const issues = useSyncQuery(loadAllIssues, {}, "issueModal:loadAllIssues");
-  const createIssue = useMutation(api.issues.createIssue);
+  const client = useLocalStoreClient();
   const { user } = useUser();
 
   const handleSubmit = async () => {
@@ -51,7 +53,7 @@ function IssueModal({ isOpen, onDismiss }: Props) {
     const lastIssue = byKanbanOrder[byKanbanOrder.length - 1];
     const kanbanorder = generateKeyBetween(lastIssue?.kanbanorder, null);
     const now = Date.now();
-    await createIssue({
+    const args = {
       id: crypto.randomUUID(),
       title: title,
       description: description ?? "",
@@ -61,10 +63,12 @@ function IssueModal({ isOpen, onDismiss }: Props) {
       created: now,
       kanbanorder: kanbanorder,
       username: user.fullName,
-    });
+    };
+    const promise = client.mutation(api.issues.createIssue, args, args);
     if (onDismiss) onDismiss();
     reset();
     showInfo(`You created a new issue.`, `Issue created`);
+    await promise;
   };
 
   const handleClickCloseBtn = () => {

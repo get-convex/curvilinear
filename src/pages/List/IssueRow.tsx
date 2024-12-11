@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/date";
 import { Issue } from "../../types/types";
 import { api } from "../../../convex/_generated/api";
-import { useMutation } from "convex/react";
+import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
 
 interface Props {
   issue: Issue;
@@ -18,22 +18,22 @@ interface Props {
 
 function IssueRow({ issue, style }: Props) {
   const navigate = useNavigate();
-
-  const changeStatus = useMutation(api.issues.changeStatus);
-  const changePriority = useMutation(api.issues.changePriority);
+  const client = useLocalStoreClient();
 
   const handleChangeStatus = async (status: string) => {
-    await changeStatus({
+    const args = {
       id: issue.id,
       status,
-    });
+    };
+    await client.mutation(api.issues.changeStatus, args, args);
   };
 
   const handleChangePriority = async (priority: string) => {
-    await changePriority({
+    const args = {
       id: issue.id,
       priority,
-    });
+    };
+    await client.mutation(api.issues.changePriority, args, args);
   };
 
   return (
