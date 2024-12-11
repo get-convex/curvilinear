@@ -34,6 +34,7 @@ function IssuePage() {
 
   let issue = issues?.find((i) => i.id === params.id);
 
+  // XXX: Remove this hack once we fix updates & deletes.
   const lastIssue = useRef(issue);
   if (!issue) {
     issue = lastIssue.current;
