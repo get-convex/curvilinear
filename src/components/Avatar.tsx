@@ -36,7 +36,8 @@ function Avatar({ online, showOffline, name, onClick, avatarUrl }: Props) {
   let avatar, status;
 
   // create avatar image icon
-  if (avatarUrl)
+  // XXX: Sync users everywhere.
+  if (avatarUrl && false)
     avatar = (
       <img
         src={avatarUrl}

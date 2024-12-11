@@ -1,6 +1,8 @@
 import { v } from "convex/values";
 import { DatabaseReader, mutation } from "./_generated/server";
 
+
+
 export const createIssue = mutation({
   args: {
     id: v.string(),
@@ -14,6 +16,13 @@ export const createIssue = mutation({
     username: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not logged in.");
+    }
+    if (identity.name !== args.username) {
+      throw new Error("Username does not match logged in user.");
+    }    
     await ctx.db.insert("issues", args);
   },
 });
@@ -23,9 +32,13 @@ export const changeStatus = mutation({
     id: v.string(),
     status: v.string(),
   },
-  handler: async ({ db }, args) => {
-    const issue = await getIssue(db, args.id);
-    return db.patch(issue._id, { status: args.status, modified: Date.now() });
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not logged in.");
+    }
+    const issue = await getIssue(ctx.db, args.id);
+    return ctx.db.patch(issue._id, { status: args.status, modified: Date.now() });
   },
 });
 
@@ -34,9 +47,13 @@ export const changePriority = mutation({
     id: v.string(),
     priority: v.string(),
   },
-  handler: async ({ db }, args) => {
-    const issue = await getIssue(db, args.id);
-    return db.patch(issue._id, {
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not logged in.");
+    }
+    const issue = await getIssue(ctx.db, args.id);
+    return ctx.db.patch(issue._id, {
       priority: args.priority,
       modified: Date.now(),
     });
@@ -48,9 +65,13 @@ export const changeTitle = mutation({
     id: v.string(),
     title: v.string(),
   },
-  handler: async ({ db }, args) => {
-    const issue = await getIssue(db, args.id);
-    return db.patch(issue._id, { title: args.title, modified: Date.now() });
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not logged in.");
+    }
+    const issue = await getIssue(ctx.db, args.id);
+    return ctx.db.patch(issue._id, { title: args.title, modified: Date.now() });
   },
 });
 
@@ -59,9 +80,13 @@ export const changeDescription = mutation({
     id: v.string(),
     description: v.string(),
   },
-  handler: async ({ db }, args) => {
-    const issue = await getIssue(db, args.id);
-    return db.patch(issue._id, {
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not logged in.");
+    }
+    const issue = await getIssue(ctx.db, args.id);
+    return ctx.db.patch(issue._id, {
       description: args.description,
       modified: Date.now(),
     });
@@ -74,9 +99,13 @@ export const changeKanbanOrder = mutation({
     status: v.string(),
     kanbanorder: v.string(),
   },
-  handler: async ({ db }, args) => {
-    const issue = await getIssue(db, args.id);
-    return db.patch(issue._id, {
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not logged in.");
+    }
+    const issue = await getIssue(ctx.db, args.id);
+    return ctx.db.patch(issue._id, {
       status: args.status,
       kanbanorder: args.kanbanorder,
       modified: Date.now(),
@@ -88,9 +117,13 @@ export const deleteIssue = mutation({
   args: {
     id: v.string(),
   },
-  handler: async ({ db }, args) => {
-    const issue = await getIssue(db, args.id);
-    await db.delete(issue._id);
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not logged in.");
+    }
+    const issue = await getIssue(ctx.db, args.id);
+    await ctx.db.delete(issue._id);
   },
 });
 
