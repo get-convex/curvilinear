@@ -6,6 +6,8 @@ import { MenuContext } from "../App";
 import FilterMenu from "./contextmenu/FilterMenu";
 import { useFilterState } from "../utils/filterState";
 import { Issue, PriorityDisplay, StatusDisplay } from "../types/types";
+import { loadAllIssues } from "@/queries";
+import { useSyncQuery } from "local-store/react/LocalStoreProvider";
 
 interface Props {
   issues: Issue[];
@@ -25,8 +27,9 @@ export default function ({
   const { showMenu, setShowMenu } = useContext(MenuContext)!;
   const [searchQuery, setSearchQuery] = useState(``);
 
-  // XXX: get total issues count
-  const totalIssuesCount: number = 10;
+  const allIssues: Issue[] =
+    useSyncQuery(loadAllIssues, {}, "loadAllIssues") ?? [];
+  const totalIssuesCount: number = allIssues.length;
 
   const filteredIssuesCount = issues.length;
 

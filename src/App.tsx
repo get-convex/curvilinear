@@ -25,32 +25,32 @@ const router = createBrowserRouter([
     path: `/`,
     element: <Root />,
     loader: async () => {
+      // XXX: Preload all issues here.
       console.time(`preload`);
-      // XXX: Preload all relevant data here.
       console.timeEnd(`preload`);
       return null;
     },
-    errorElement: <RouteErrorBoundary />,
+    // errorElement: <RouteErrorBoundary />,
     children: [
       {
         path: `/`,
         element: <List />,
-        errorElement: <RouteErrorBoundary />,
+        // errorElement: <RouteErrorBoundary />,
       },
       {
         path: `/search`,
         element: <List showSearch={true} />,
-        errorElement: <RouteErrorBoundary />,
+        // errorElement: <RouteErrorBoundary />,
       },
       {
         path: `/board`,
         element: <Board />,
-        errorElement: <RouteErrorBoundary />,
+        // errorElement: <RouteErrorBoundary />,
       },
       {
         path: `/issue/:id`,
         element: <Issue />,
-        errorElement: <RouteErrorBoundary />,
+        // errorElement: <RouteErrorBoundary />,
       },
     ],
   },

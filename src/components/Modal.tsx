@@ -80,7 +80,10 @@ function Modal({
         <div
           ref={ref}
           className={modalClasses}
-          style={{ width: "400px", border: "1px solid rgb(229, 231, 235)" }}
+          style={{
+            width: size === "large" ? "75%" : undefined,
+            border: "1px solid rgb(229, 231, 235)",
+          }}
         >
           {title && (
             <div className="flex items-center justify-between w-full pl-8 pr-4 border-b border-gray-200">

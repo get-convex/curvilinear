@@ -5,6 +5,10 @@ import Avatar from "../../components/Avatar";
 import { formatDate } from "../../utils/date";
 import { showWarning } from "../../utils/notification";
 import { Comment, Issue } from "../../types/types";
+import { useSyncQuery } from "local-store/react/LocalStoreProvider";
+import { loadComments } from "@/queries";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export interface CommentsProps {
   issue: Issue;
@@ -12,12 +16,15 @@ export interface CommentsProps {
 
 function Comments(commentProps: CommentsProps) {
   const [newCommentBody, setNewCommentBody] = useState<string>(``);
-  // XXX: Load all comments for an issue here.
-  const allComments = { data: [] as Comment[] };
 
-  const comments = allComments.data.filter(
-    (c) => c.issue_id === commentProps.issue.id,
+  const comments: Comment[] | undefined = useSyncQuery(
+    loadComments,
+    { issue_id: commentProps.issue.id },
+    "loadComments",
   );
+  console.log("comments", comments);
+
+  const postComment = useMutation(api.comments.postComment);
 
   const commentList = () => {
     if (comments && comments.length > 0) {
@@ -43,7 +50,7 @@ function Comments(commentProps: CommentsProps) {
     }
   };
 
-  const handlePost = () => {
+  const handlePost = async () => {
     if (!newCommentBody) {
       showWarning(
         `Please enter a comment before submitting`,
@@ -51,16 +58,13 @@ function Comments(commentProps: CommentsProps) {
       );
       return;
     }
-
-    // db.comment.create({
-    //   data: {
-    //     id: uuidv4(),
-    //     issue_id: issue.id,
-    //     body: newCommentBody,
-    //     created_at: new Date(),
-    //     username: 'testuser',
-    //   },
-    // })
+    await postComment({
+      id: crypto.randomUUID(),
+      issue_id: commentProps.issue.id,
+      body: newCommentBody,
+      created_at: Date.now(),
+      username: "testuser",
+    });
     setNewCommentBody(``);
   };
 

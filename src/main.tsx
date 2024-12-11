@@ -6,6 +6,9 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { LocalStoreProvider } from "local-store/react/LocalStoreProvider";
+import { sync as syncSchema } from "../convex/sync/schema";
+import { IndexedDbPersistence } from "local-store/browser/localPersistence";
 
 const clerkPubKey =
   "pk_test_c3BlY2lhbC1tYWNrZXJlbC04Ni5jbGVyay5hY2NvdW50cy5kZXYk";
@@ -16,14 +19,25 @@ const modalRoot = document.createElement("div");
 modalRoot.id = "root-modal";
 document.body.appendChild(modalRoot);
 
+const mutations = {};
+
+// const persistence = new IndexedDbPersistence("curvilinear");
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <ClerkProvider publishableKey={clerkPubKey}>
-        <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+    {/* <ErrorBoundary> */}
+    <ClerkProvider publishableKey={clerkPubKey}>
+      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+        <LocalStoreProvider
+          syncSchema={syncSchema}
+          client={(convex as any).sync}
+          mutations={mutations}
+          persistence={undefined}
+        >
           <App />
-        </ConvexProviderWithClerk>
-      </ClerkProvider>
-    </ErrorBoundary>
+        </LocalStoreProvider>
+      </ConvexProviderWithClerk>
+    </ClerkProvider>
+    {/* </ErrorBoundary> */}
   </React.StrictMode>,
 );

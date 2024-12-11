@@ -1,7 +1,11 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
-export default defineSchema({
+import { tableResolverFactory } from "local-store/server/resolvers";
+import { streamQueryForServerSchema } from "local-store/server/streamQuery";
+import schema from "../schema";
+
+export const sync = defineSchema({
   issues: defineTable({
     id: v.string(),
     title: v.string(),
@@ -22,3 +26,6 @@ export default defineSchema({
     created_at: v.number(),
   }).index("by_issue_id", ["issue_id", "created_at"]),
 });
+
+export const s = tableResolverFactory(sync, schema);
+export const streamQuery = streamQueryForServerSchema(schema);

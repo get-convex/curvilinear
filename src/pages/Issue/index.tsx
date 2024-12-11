@@ -12,19 +12,23 @@ import Editor from "../../components/editor/Editor";
 import DeleteModal from "./DeleteModal";
 import Comments from "./Comments";
 import debounce from "lodash.debounce";
+import { useSyncQuery } from "local-store/react/LocalStoreProvider";
+import { loadAllIssues } from "@/queries";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 const debounceTime = 500;
 
 function IssuePage() {
   const navigate = useNavigate();
-
-  // XXX: Load issues here.
-  // const issues = useShape<Issue>(issueShape)
-  const issues = { data: [] as Issue[] };
-
+  const issues: Issue[] | undefined = useSyncQuery(
+    loadAllIssues,
+    {},
+    "loadAllIssues",
+  );
   const params = useParams();
 
-  const issue = issues.data.find((i) => i.id === params.id)!;
+  const issue = issues?.find((i) => i.id === params.id)!;
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -33,8 +37,13 @@ function IssuePage() {
   const [dirtyDescription, setDirtyDescription] = useState<string | null>(null);
   const descriptionIsDirty = useRef(false);
 
-  /// XXX: Handle loading state here.
-  if (issue === ("loading" as any)) {
+  const changeStatus = useMutation(api.issues.changeStatus);
+  const changePriority = useMutation(api.issues.changePriority);
+  const changeTitle = useMutation(api.issues.changeTitle);
+  const changeDescription = useMutation(api.issues.changeDescription);
+  const deleteIssue = useMutation(api.issues.deleteIssue);
+
+  if (issues === undefined) {
     return <div className="p-8 w-full text-center">Loading...</div>;
   } else if (!issue) {
     return <div className="p-8 w-full text-center">Issue not found</div>;
@@ -51,42 +60,26 @@ function IssuePage() {
     descriptionIsDirty.current = false;
   }
 
-  const handleStatusChange = (_status: any) => {
-    // db.issue.update({
-    //   data: {
-    //     status: status,
-    //     modified: new Date(),
-    //   },
-    //   where: {
-    //     id: issue.id,
-    //   },
-    // })
+  const handleStatusChange = async (status: any) => {
+    await changeStatus({
+      id: issue.id,
+      status,
+    });
   };
 
-  const handlePriorityChange = (_priority: string) => {
-    // db.issue.update({
-    //   data: {
-    //     priority: priority,
-    //     modified: new Date(),
-    //   },
-    //   where: {
-    //     id: issue.id,
-    //   },
-    // })
+  const handlePriorityChange = async (priority: string) => {
+    await changePriority({
+      id: issue.id,
+      priority,
+    });
   };
 
-  const handleTitleChangeDebounced = debounce(async (_title: string) => {
-    // await db.issue.update({
-    //   data: {
-    //     title: title,
-    //     modified: new Date(),
-    //   },
-    //   where: {
-    //     id: issue.id,
-    //   },
-    // })
-    // We can't set titleIsDirty.current = false here because we haven't yet received
-    // the updated issue from the db
+  // XXX: Remove debouncing here.
+  const handleTitleChangeDebounced = debounce(async (title: string) => {
+    await changeTitle({
+      id: issue.id,
+      title,
+    });
   }, debounceTime);
 
   const handleTitleChange = (title: string) => {
@@ -97,18 +90,11 @@ function IssuePage() {
   };
 
   const handleDescriptionChangeDebounced = debounce(
-    async (_description: string) => {
-      // await db.issue.update({
-      //   data: {
-      //     description: description,
-      //     modified: new Date(),
-      //   },
-      //   where: {
-      //     id: issue.id,
-      //   },
-      // })
-      // We can't set descriptionIsDirty.current = false here because we haven't yet received
-      // the updated issue from the db
+    async (description: string) => {
+      await changeDescription({
+        id: issue.id,
+        description,
+      });
     },
     debounceTime,
   );
@@ -120,17 +106,10 @@ function IssuePage() {
     handleDescriptionChangeDebounced(description);
   };
 
-  const handleDelete = () => {
-    // db.comment.deleteMany({
-    //   where: {
-    //     issue_id: issue.id,
-    //   },
-    // })
-    // db.issue.delete({
-    //   where: {
-    //     id: issue.id,
-    //   },
-    // })
+  const handleDelete = async () => {
+    await deleteIssue({
+      id: issue.id,
+    });
     handleClose();
   };
 

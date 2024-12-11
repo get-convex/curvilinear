@@ -12,7 +12,12 @@ import PriorityMenu from "./contextmenu/PriorityMenu";
 import StatusMenu from "./contextmenu/StatusMenu";
 
 import { Priority, Status, PriorityDisplay } from "../types/types";
-import { showInfo } from "../utils/notification";
+import { showInfo, showWarning } from "../utils/notification";
+import { generateKeyBetween } from "fractional-indexing";
+import { useSyncQuery } from "local-store/react/LocalStoreProvider";
+import { loadAllIssues } from "@/queries";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 interface Props {
   isOpen: boolean;
@@ -26,34 +31,32 @@ function IssueModal({ isOpen, onDismiss }: Props) {
   const [priority, setPriority] = useState(Priority.NONE);
   const [status, setStatus] = useState(Status.BACKLOG);
 
+  const issues = useSyncQuery(loadAllIssues, {}, "issueModal:loadAllIssues");
+  const createIssue = useMutation(api.issues.createIssue);
+
   const handleSubmit = async () => {
-    // if (title === '') {
-    //   showWarning('Please enter a title before submitting', 'Title required')
-    //   return
-    // }
+    if (title === "") {
+      showWarning("Please enter a title before submitting", "Title required");
+      return;
+    }
 
-    // const lastIssue = await db.issue.findFirst({
-    //   orderBy: {
-    //     kanbanorder: 'desc',
-    //   },
-    // })
-    // const kanbanorder = generateKeyBetween(lastIssue?.kanbanorder, null)
-
-    // const date = new Date()
-    // db.issue.create({
-    //   data: {
-    //     id: uuidv4(),
-    //     title: title,
-    //     username: 'testuser',
-    //     priority: priority,
-    //     status: status,
-    //     description: description ?? '',
-    //     modified: date,
-    //     created: date,
-    //     kanbanorder: kanbanorder,
-    //   },
-    // })
-
+    const byKanbanOrder = [...issues].sort(
+      (a, b) => a.kanbanorder - b.kanbanorder,
+    );
+    const lastIssue = byKanbanOrder[byKanbanOrder.length - 1];
+    const kanbanorder = generateKeyBetween(lastIssue?.kanbanorder, null);
+    const now = Date.now();
+    await createIssue({
+      id: crypto.randomUUID(),
+      title: title,
+      description: description ?? "",
+      priority: priority,
+      status: status,
+      modified: now,
+      created: now,
+      kanbanorder: kanbanorder,
+      username: "testuser",
+    });
     if (onDismiss) onDismiss();
     reset();
     showInfo(`You created new issue.`, `Issue created`);
