@@ -16,7 +16,7 @@ module.exports = {
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: true,
+    project: "./tsconfig.app.json",
     tsconfigRootDir: __dirname,
   },
   plugins: ["react-refresh"],

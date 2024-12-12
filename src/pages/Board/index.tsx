@@ -2,13 +2,13 @@ import TopFilter from "../../components/TopFilter";
 import IssueBoard from "./IssueBoard";
 import { useFilterState } from "../../utils/filterState";
 import { Issue } from "../../types/types";
-import { useSyncQuery } from "local-store/react/LocalStoreProvider";
-import { loadAllIssues } from "@/queries";
+import { useLocalQuery } from "local-store/react/hooks";
+import { loadAllIssues } from "@/local/queries";
 
 function Board() {
   const [_filterState] = useFilterState();
   const issues: Issue[] =
-    useSyncQuery(loadAllIssues, {}, "loadAllIssues") ?? [];
+    useLocalQuery(loadAllIssues, {}, "loadAllIssues") ?? [];
   // TODO: apply filter state
   return (
     <div className="flex flex-col flex-1 overflow-hidden">

@@ -10,6 +10,7 @@ import { formatDate } from "../../utils/date";
 import { Issue } from "../../types/types";
 import { api } from "../../../convex/_generated/api";
 import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
+import { changePriority, changeStatus } from "@/local/mutations";
 
 interface Props {
   issue: Issue;
@@ -25,7 +26,7 @@ function IssueRow({ issue, style }: Props) {
       id: issue.id,
       status,
     };
-    await client.mutation(api.issues.changeStatus, args, args);
+    await client.mutation(changeStatus, args);
   };
 
   const handleChangePriority = async (priority: string) => {
@@ -33,7 +34,7 @@ function IssueRow({ issue, style }: Props) {
       id: issue.id,
       priority,
     };
-    await client.mutation(api.issues.changePriority, args, args);
+    await client.mutation(changePriority, args);
   };
 
   return (
@@ -62,7 +63,7 @@ function IssueRow({ issue, style }: Props) {
         {issue.title.slice(0, 3000) || ``}
       </div>
       <div className="flex-shrink-0 hidden w-15 ml-auto font-normal text-gray-500 sm:block whitespace-nowrap">
-        {formatDate(issue.created)}
+        {formatDate(new Date(issue.created))}
       </div>
       <div className="flex-shrink-0 hidden ml-4 font-normal text-gray-500 sm:block w-15 md:block">
         <Avatar name={issue.username} />
