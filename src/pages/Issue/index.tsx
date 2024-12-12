@@ -32,7 +32,7 @@ function IssuePage() {
   const issues: Issue[] | undefined = useLocalQuery(
     loadAllIssues,
     {},
-    "loadAllIssues"
+    "loadAllIssues",
   );
   const params = useParams();
 
@@ -110,7 +110,7 @@ function IssuePage() {
       };
       await client.mutation(changeDescription, args);
     },
-    debounceTime
+    debounceTime,
   );
 
   const handleDescriptionChange = (description: string) => {

@@ -17,6 +17,7 @@ import IssueModal from "./IssueModal";
 import ItemGroup from "./ItemGroup";
 import ProfileMenu from "./ProfileMenu";
 import { useUser } from "@clerk/clerk-react";
+import DebugModal from "./DebugModal";
 
 function LeftMenu() {
   const { user } = useUser();
@@ -25,6 +26,7 @@ function LeftMenu() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showIssueModal, setShowIssueModal] = useState(false);
+  const [showDebugView, setShowDebugView] = useState(false);
   const { showMenu, setShowMenu } = useContext(MenuContext)!;
 
   const classes = classnames(
@@ -79,6 +81,7 @@ function LeftMenu() {
                 isOpen={showProfileMenu}
                 onDismiss={() => setShowProfileMenu(false)}
                 setShowAboutModal={setShowAboutModal}
+                setShowDebugView={setShowDebugView}
                 className="absolute top-10"
               />
             </div>
@@ -132,13 +135,6 @@ function LeftMenu() {
               />
               <span>Backlog</span>
             </Link>
-            <Link
-              to="/board"
-              className="flex items-center pl-6 rounded cursor-pointer h-7 hover:bg-gray-100"
-            >
-              <BoardIcon className="w-3.5 h-3.5 mr-2" />
-              <span>Board</span>
-            </Link>
           </ItemGroup>
 
           {/* extra space */}
@@ -176,6 +172,12 @@ function LeftMenu() {
         <IssueModal
           isOpen={showIssueModal}
           onDismiss={() => setShowIssueModal(false)}
+        />
+      }
+      {
+        <DebugModal
+          isOpen={showDebugView}
+          onDismiss={() => setShowDebugView(false)}
         />
       }
     </>

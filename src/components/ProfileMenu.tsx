@@ -1,14 +1,16 @@
 import { Transition } from "@headlessui/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import classnames from "classnames";
 import { useClickOutside } from "../hooks/useClickOutside";
 import Toggle from "./Toggle";
 import { SignOutButton } from "@clerk/clerk-react";
+import Modal from "./Modal";
 
 interface Props {
   isOpen: boolean;
   onDismiss?: () => void;
   setShowAboutModal?: (show: boolean) => void;
+  setShowDebugView?: (show: boolean) => void;
   className?: string;
 }
 export default function ProfileMenu({
@@ -16,6 +18,7 @@ export default function ProfileMenu({
   className,
   onDismiss,
   setShowAboutModal,
+  setShowDebugView,
 }: Props) {
   const connectivityState = { status: `disconnected` };
   const classes = classnames(
@@ -28,14 +31,6 @@ export default function ProfileMenu({
   const connectivityStateDisplay =
     connectivityState.status[0].toUpperCase() +
     connectivityState.status.slice(1);
-
-  // const toggleConnectivityState = () => {
-  //   if (connectivityConnected) {
-  //     electric.disconnect()
-  //   } else {
-  //     electric.connect()
-  //   }
-  // }
 
   useClickOutside(ref, () => {
     if (isOpen && onDismiss) {
@@ -54,6 +49,7 @@ export default function ProfileMenu({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
         className={classes}
+        style={{ border: "1px solid rgb(229, 231, 235)" }}
       >
         <button
           className="flex items-center h-8 px-3 hover:bg-gray-100"
@@ -82,6 +78,15 @@ export default function ProfileMenu({
         >
           GitHub
         </a>
+        <button
+          className="flex items-center h-8 px-3 hover:bg-gray-100"
+          onClick={() => {
+            setShowDebugView?.(true);
+            onDismiss?.();
+          }}
+        >
+          Debug view
+        </button>
         <a className="flex items-center h-8 px-3 hover:bg-gray-100">
           <SignOutButton />
         </a>

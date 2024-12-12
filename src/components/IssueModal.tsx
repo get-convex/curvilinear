@@ -46,7 +46,7 @@ function IssueModal({ isOpen, onDismiss }: Props) {
       return;
     }
     const byKanbanOrder = [...issues].sort(
-      (a, b) => a.kanbanorder - b.kanbanorder
+      (a, b) => a.kanbanorder - b.kanbanorder,
     );
     const lastIssue = byKanbanOrder[byKanbanOrder.length - 1];
     const kanbanorder = generateKeyBetween(lastIssue?.kanbanorder, null);

@@ -1,7 +1,6 @@
 import { SignInButton } from "@clerk/clerk-react";
 import { Authenticated, Unauthenticated } from "convex/react";
 import "animate.css/animate.min.css";
-import Board from "./pages/Board";
 import { useState, createContext } from "react";
 import {
   createBrowserRouter,
@@ -40,11 +39,6 @@ const router = createBrowserRouter([
       {
         path: `/search`,
         element: <List showSearch={true} />,
-        // errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: `/board`,
-        element: <Board />,
         // errorElement: <RouteErrorBoundary />,
       },
       {

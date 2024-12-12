@@ -10,7 +10,7 @@ export const getIssueById = factory.defineLocalQuery(
     const issues: Issue[] = loadAllIssues.handler(ctx, {});
     return issues.find((i) => i.id === args.id) ?? null;
   },
-  "getIssueById"
+  "getIssueById",
 );
 
 export const loadComments = factory.defineLocalQuery(
@@ -26,5 +26,5 @@ export const loadComments = factory.defineLocalQuery(
     }
     return results.filter((r: any) => r.issue_id === args.issue_id);
   },
-  "loadComments"
+  "loadComments",
 );

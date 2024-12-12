@@ -58,5 +58,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       </ConvexProviderWithClerk>
     </ClerkProvider>
     {/* </ErrorBoundary> */}
-  </React.StrictMode>
+  </React.StrictMode>,
 );

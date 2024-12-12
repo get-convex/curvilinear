@@ -55,7 +55,7 @@ function Comments(commentProps: CommentsProps) {
     if (!newCommentBody) {
       showWarning(
         `Please enter a comment before submitting`,
-        `Comment required`
+        `Comment required`,
       );
       return;
     }
