@@ -2,13 +2,12 @@ import TopFilter from "../../components/TopFilter";
 import IssueList from "./IssueList";
 import { useFilterState } from "../../utils/filterState";
 import { Issue } from "../../types/types";
-import { useSyncQuery } from "local-store/react/LocalStoreProvider";
-import { loadAllIssues } from "@/queries";
+import { loadAllIssues } from "@/local/queries";
+import { useLocalQuery } from "local-store/react/hooks";
 
 function List({ showSearch = false }) {
   const [filterState] = useFilterState();
-  const issues: Issue[] =
-    useSyncQuery(loadAllIssues, {}, "loadAllIssues") ?? [];
+  const issues: Issue[] = useLocalQuery(loadAllIssues, {}) ?? [];
   const filteredIssues = issues.filter((issue) => {
     const tests = [true];
     if (filterState.priority && filterState.priority.length > 0) {

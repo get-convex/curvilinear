@@ -15,8 +15,8 @@ export type Issue = {
   description: string;
   priority: (typeof Priority)[keyof typeof Priority];
   status: (typeof Status)[keyof typeof Status];
-  modified: Date;
-  created: Date;
+  modified: number;
+  created: number;
   kanbanorder: string;
   username: string;
 };
@@ -26,7 +26,7 @@ export type Comment = {
   body: string;
   username: string;
   issue_id: string;
-  created_at: Date;
+  created_at: number;
 };
 
 export const Priority = {

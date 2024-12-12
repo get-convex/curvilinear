@@ -12,12 +12,16 @@ import Editor from "../../components/editor/Editor";
 import DeleteModal from "./DeleteModal";
 import Comments from "./Comments";
 import debounce from "lodash.debounce";
+import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
+import { loadAllIssues } from "@/local/queries";
+import { useLocalQuery } from "local-store/react/hooks";
 import {
-  useSyncQuery,
-  useLocalStoreClient,
-} from "local-store/react/LocalStoreProvider";
-import { loadAllIssues } from "@/queries";
-import { api } from "../../../convex/_generated/api";
+  changeDescription,
+  changePriority,
+  changeStatus,
+  changeTitle,
+  deleteIssue,
+} from "@/local/mutations";
 
 // XXX: Find a way to remove debouncing.
 const debounceTime = 500;
@@ -25,10 +29,10 @@ const debounceTime = 500;
 function IssuePage() {
   const navigate = useNavigate();
   const client = useLocalStoreClient();
-  const issues: Issue[] | undefined = useSyncQuery(
+  const issues: Issue[] | undefined = useLocalQuery(
     loadAllIssues,
     {},
-    "loadAllIssues",
+    "loadAllIssues"
   );
   const params = useParams();
 
@@ -72,7 +76,7 @@ function IssuePage() {
       id: issue.id,
       status,
     };
-    await client.mutation(api.issues.changeStatus, args, args);
+    await client.mutation(changeStatus, args);
   };
 
   const handlePriorityChange = async (priority: string) => {
@@ -80,7 +84,7 @@ function IssuePage() {
       id: issue.id,
       priority,
     };
-    await client.mutation(api.issues.changePriority, args, args);
+    await client.mutation(changePriority, args);
   };
 
   const handleTitleChangeDebounced = debounce(async (title: string) => {
@@ -88,7 +92,7 @@ function IssuePage() {
       id: issue.id,
       title,
     };
-    await client.mutation(api.issues.changeTitle, args, args);
+    await client.mutation(changeTitle, args);
   }, debounceTime);
 
   const handleTitleChange = (title: string) => {
@@ -104,9 +108,9 @@ function IssuePage() {
         id: issue.id,
         description,
       };
-      await client.mutation(api.issues.changeDescription, args, args);
+      await client.mutation(changeDescription, args);
     },
-    debounceTime,
+    debounceTime
   );
 
   const handleDescriptionChange = (description: string) => {
@@ -120,7 +124,7 @@ function IssuePage() {
     const args = {
       id: issue.id,
     };
-    const promise = client.mutation(api.issues.deleteIssue, args, args);
+    const promise = client.mutation(deleteIssue, args);
     handleClose();
     await promise;
   };

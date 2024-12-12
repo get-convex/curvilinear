@@ -5,13 +5,11 @@ import Avatar from "../../components/Avatar";
 import { formatDate } from "../../utils/date";
 import { showWarning } from "../../utils/notification";
 import { Comment, Issue } from "../../types/types";
-import {
-  useLocalStoreClient,
-  useSyncQuery,
-} from "local-store/react/LocalStoreProvider";
-import { loadComments } from "@/queries";
-import { api } from "../../../convex/_generated/api";
+import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
+import { loadComments } from "@/local/queries";
+import { useLocalQuery } from "local-store/react/hooks";
 import { useUser } from "@clerk/clerk-react";
+import { postComment } from "@/local/mutations";
 
 export interface CommentsProps {
   issue: Issue;
@@ -21,11 +19,9 @@ function Comments(commentProps: CommentsProps) {
   const [newCommentBody, setNewCommentBody] = useState<string>(``);
   const { user } = useUser();
 
-  const comments: Comment[] | undefined = useSyncQuery(
-    loadComments,
-    { issue_id: commentProps.issue.id },
-    "loadComments",
-  );
+  const comments: Comment[] | undefined = useLocalQuery(loadComments, {
+    issue_id: commentProps.issue.id,
+  });
   console.log("comments", comments);
 
   const client = useLocalStoreClient();
@@ -43,7 +39,7 @@ function Comments(commentProps: CommentsProps) {
               {comment.username}
             </span>
             <span className=" ms-auto text-sm text-gray-400 ml-2">
-              {formatDate(comment.created_at)}
+              {formatDate(new Date(comment.created_at))}
             </span>
           </div>
           <div className="mt-2 text-md prose w-full max-w-full">
@@ -59,7 +55,7 @@ function Comments(commentProps: CommentsProps) {
     if (!newCommentBody) {
       showWarning(
         `Please enter a comment before submitting`,
-        `Comment required`,
+        `Comment required`
       );
       return;
     }
@@ -74,7 +70,7 @@ function Comments(commentProps: CommentsProps) {
       created_at: Date.now(),
       username: user.fullName,
     };
-    const promise = client.mutation(api.comments.postComment, args, args);
+    const promise = client.mutation(postComment, args);
     setNewCommentBody("");
     await promise;
   };

@@ -14,11 +14,9 @@ import StatusMenu from "./contextmenu/StatusMenu";
 import { Priority, Status, PriorityDisplay } from "../types/types";
 import { showInfo, showWarning } from "../utils/notification";
 import { generateKeyBetween } from "fractional-indexing";
-import {
-  useLocalStoreClient,
-  useSyncQuery,
-} from "local-store/react/LocalStoreProvider";
-import { loadAllIssues } from "@/queries";
+import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
+import { useLocalQuery } from "local-store/react/hooks";
+import { loadAllIssues } from "@/local/queries";
 import { api } from "../../convex/_generated/api";
 import { useUser } from "@clerk/clerk-react";
 
@@ -34,7 +32,7 @@ function IssueModal({ isOpen, onDismiss }: Props) {
   const [priority, setPriority] = useState(Priority.NONE);
   const [status, setStatus] = useState(Status.BACKLOG);
 
-  const issues = useSyncQuery(loadAllIssues, {}, "issueModal:loadAllIssues");
+  const issues = useLocalQuery(loadAllIssues, {}) ?? [];
   const client = useLocalStoreClient();
   const { user } = useUser();
 
@@ -48,7 +46,7 @@ function IssueModal({ isOpen, onDismiss }: Props) {
       return;
     }
     const byKanbanOrder = [...issues].sort(
-      (a, b) => a.kanbanorder - b.kanbanorder,
+      (a, b) => a.kanbanorder - b.kanbanorder
     );
     const lastIssue = byKanbanOrder[byKanbanOrder.length - 1];
     const kanbanorder = generateKeyBetween(lastIssue?.kanbanorder, null);
