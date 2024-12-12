@@ -116,7 +116,7 @@ const mutations: Record<string, Mutation> = {
   },
 };
 
-// const persistence = new IndexedDbPersistence("curvilinear");
+const persistence = new IndexedDbPersistence("curvilinear");
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -127,7 +127,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           syncSchema={syncSchema}
           client={(convex as any).sync}
           mutations={mutations}
-          persistence={undefined}
+          persistence={persistence}
         >
           <App />
         </LocalStoreProvider>

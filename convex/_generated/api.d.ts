@@ -17,6 +17,7 @@ import type * as comments from "../comments.js";
 import type * as issues from "../issues.js";
 import type * as sync_comments from "../sync/comments.js";
 import type * as sync_issues from "../sync/issues.js";
+import type * as testing from "../testing.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   issues: typeof issues;
   "sync/comments": typeof sync_comments;
   "sync/issues": typeof sync_issues;
+  testing: typeof testing;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
