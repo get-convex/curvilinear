@@ -3,14 +3,14 @@ import { Authenticated, Unauthenticated } from "convex/react";
 import "animate.css/animate.min.css";
 import { useState, createContext } from "react";
 import {
-  createBrowserRouter,
-  isRouteErrorResponse,
+  createBrowserRouter,  
   RouterProvider,
 } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import List from "./pages/List";
 import Root from "./pages/root";
 import Issue from "./pages/Issue";
+import { localStore } from "./convex";
 
 interface MenuContextInterface {
   showMenu: boolean;
@@ -19,32 +19,63 @@ interface MenuContextInterface {
 
 export const MenuContext = createContext(null as MenuContextInterface | null);
 
+function preload(ctx: { localDb: any }, args: any) {
+  const issues = ctx.localDb
+    .query("issues")
+    .withIndex("by_issue_id")
+    .take(100000);
+  let numComments = 0;
+  for (const issue of issues) {
+    const comments = ctx.localDb
+      .query("comments")
+      .withIndex("by_issue_id", (q: any) => q.eq("issue_id", issue.id))
+      .take(100000);
+    numComments += comments.length;
+  }
+  console.log(`Preloaded ${issues.length} issues and ${numComments} comments.`);
+}
+
+console.log("preloading", localStore);
+
 const router = createBrowserRouter([
   {
     path: `/`,
     element: <Root />,
     loader: async () => {
-      // XXX: Preload all issues here.
       console.time(`preload`);
+      await new Promise((resolve, reject) => {
+        const subscriptionId = localStore.addSyncQuery(
+          preload,
+          {},
+          (result) => {
+            if (result.kind === "loading") {
+              return;
+            }
+            queueMicrotask(() => localStore.removeSyncQuery(subscriptionId));
+            if (result.status === "success") {
+              resolve(result);
+            } else {
+              reject(result.error);
+            }
+          },
+          "preload",
+        );
+      });
       console.timeEnd(`preload`);
       return null;
     },
-    // errorElement: <RouteErrorBoundary />,
     children: [
       {
         path: `/`,
         element: <List />,
-        // errorElement: <RouteErrorBoundary />,
       },
       {
         path: `/search`,
         element: <List showSearch={true} />,
-        // errorElement: <RouteErrorBoundary />,
       },
       {
         path: `/issue/:id`,
         element: <Issue />,
-        // errorElement: <RouteErrorBoundary />,
       },
     ],
   },
@@ -77,28 +108,3 @@ const App = () => {
 };
 
 export default App;
-
-function RouteErrorBoundary({ error }: any) {
-  console.log(error);
-  if (isRouteErrorResponse(error)) {
-    return (
-      <>
-        <h1>
-          {error.status} {error.statusText}
-        </h1>
-        <p>{error.data}</p>
-      </>
-    );
-  } else if (error instanceof Error) {
-    return (
-      <div>
-        <h1>Error</h1>
-        <p>{error.message}</p>
-        <p>The stack trace is:</p>
-        <pre>{error.stack}</pre>
-      </div>
-    );
-  } else {
-    return <h1>Unknown Error</h1>;
-  }
-}
