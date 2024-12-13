@@ -1,30 +1,49 @@
-import { Issue } from "../types/types";
 import { factory } from "./types";
 
+export const preload = factory.defineLocalQuery((ctx) => {
+  const issues = ctx.localDb.query("issues").withIndex("by_issue_id").collect();
+  const allComments = [];
+  for (const issue of issues) {
+    const comments = ctx.localDb
+      .query("comments")
+      .withIndex("by_issue_id", (q: any) => q.eq("issue_id", issue.id))
+      .collect();
+    allComments.push(...comments);
+  }
+  let length = 0;
+  for (const issue of issues) {
+    length += JSON.stringify(issue).length;
+  }
+  for (const comment of allComments) {
+    length += JSON.stringify(comment).length;
+  }
+  console.log(
+    `Preloaded ${issues.length} issues and ${allComments.length} comments (${(length / 1024).toFixed(2)}KB).`,
+  );
+  return [];
+}, "preload");
+
 export const loadAllIssues = factory.defineLocalQuery((ctx) => {
-  return ctx.localDb.query("issues").withIndex("by_issue_id").take(100000);
+  return ctx.localDb.query("issues").withIndex("by_issue_id").collect();
 }, "loadAllIssues");
 
 export const getIssueById = factory.defineLocalQuery(
   (ctx, args: { id: string }) => {
-    const issues: Issue[] = loadAllIssues.handler(ctx, {});
-    return issues.find((i) => i.id === args.id) ?? null;
+    // XXX: `.eq()` type expectes undefined.
+    return ctx.localDb
+      .query("issues")
+      .withIndex("by_issue_id", (q) => q.eq("id", args.id as any))
+      .unique();
   },
   "getIssueById",
 );
 
 export const loadComments = factory.defineLocalQuery(
   (ctx, args: { issue_id: string }) => {
-    const results = ctx.localDb
+    return ctx.localDb
       .query("comments")
       .withIndex("by_issue_id", (q: any) => q.eq("issue_id", args.issue_id))
       .collect();
-    for (const result of results) {
-      if (result.issue_id !== args.issue_id) {
-        console.log("issue_id mismatch", result.issue_id, args.issue_id);
-      }
-    }
-    return results.filter((r: any) => r.issue_id === args.issue_id);
   },
   "loadComments",
 );

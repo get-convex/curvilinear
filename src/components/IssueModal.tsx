@@ -13,12 +13,11 @@ import StatusMenu from "./contextmenu/StatusMenu";
 
 import { Priority, Status, PriorityDisplay } from "../types/types";
 import { showInfo, showWarning } from "../utils/notification";
-import { generateKeyBetween } from "fractional-indexing";
 import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
 import { useLocalQuery } from "local-store/react/hooks";
 import { loadAllIssues } from "@/local/queries";
-import { api } from "../../convex/_generated/api";
 import { useUser } from "@clerk/clerk-react";
+import { createIssue } from "@/local/mutations";
 
 interface Props {
   isOpen: boolean;
@@ -45,11 +44,6 @@ function IssueModal({ isOpen, onDismiss }: Props) {
       showWarning("Please login to create an issue", "Login required");
       return;
     }
-    const byKanbanOrder = [...issues].sort(
-      (a, b) => a.kanbanorder - b.kanbanorder,
-    );
-    const lastIssue = byKanbanOrder[byKanbanOrder.length - 1];
-    const kanbanorder = generateKeyBetween(lastIssue?.kanbanorder, null);
     const now = Date.now();
     const args = {
       id: crypto.randomUUID(),
@@ -59,10 +53,9 @@ function IssueModal({ isOpen, onDismiss }: Props) {
       status: status,
       modified: now,
       created: now,
-      kanbanorder: kanbanorder,
       username: user.fullName,
     };
-    const promise = client.mutation(api.issues.createIssue, args, args);
+    const promise = client.mutation(createIssue, args);
     if (onDismiss) onDismiss();
     reset();
     showInfo(`You created a new issue.`, `Issue created`);

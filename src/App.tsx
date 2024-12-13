@@ -2,15 +2,13 @@ import { SignInButton } from "@clerk/clerk-react";
 import { Authenticated, Unauthenticated } from "convex/react";
 import "animate.css/animate.min.css";
 import { useState, createContext } from "react";
-import {
-  createBrowserRouter,  
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import List from "./pages/List";
 import Root from "./pages/root";
 import Issue from "./pages/Issue";
 import { localStore } from "./convex";
+import { preload } from "./local/queries";
 
 interface MenuContextInterface {
   showMenu: boolean;
@@ -18,24 +16,6 @@ interface MenuContextInterface {
 }
 
 export const MenuContext = createContext(null as MenuContextInterface | null);
-
-function preload(ctx: { localDb: any }, args: any) {
-  const issues = ctx.localDb
-    .query("issues")
-    .withIndex("by_issue_id")
-    .take(100000);
-  let numComments = 0;
-  for (const issue of issues) {
-    const comments = ctx.localDb
-      .query("comments")
-      .withIndex("by_issue_id", (q: any) => q.eq("issue_id", issue.id))
-      .take(100000);
-    numComments += comments.length;
-  }
-  console.log(`Preloaded ${issues.length} issues and ${numComments} comments.`);
-}
-
-console.log("preloading", localStore);
 
 const router = createBrowserRouter([
   {
@@ -45,12 +25,13 @@ const router = createBrowserRouter([
       console.time(`preload`);
       await new Promise((resolve, reject) => {
         const subscriptionId = localStore.addSyncQuery(
-          preload,
+          preload.handler,
           {},
           (result) => {
             if (result.kind === "loading") {
               return;
             }
+            // XXX: Have the layer above pass in `subscriptionId` to the callback.
             queueMicrotask(() => localStore.removeSyncQuery(subscriptionId));
             if (result.status === "success") {
               resolve(result);

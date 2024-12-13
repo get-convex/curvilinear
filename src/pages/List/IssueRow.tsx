@@ -8,7 +8,6 @@ import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/date";
 import { Issue } from "../../types/types";
-import { api } from "../../../convex/_generated/api";
 import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
 import { changePriority, changeStatus } from "@/local/mutations";
 
@@ -56,7 +55,7 @@ function IssueRow({ issue, style }: Props) {
         <StatusMenu
           id={`r-status-` + issue.id}
           button={<StatusIcon status={issue.status} />}
-          onSelect={handleChangeStatus}
+          onSelect={handleChangeStatus as any}
         />
       </div>
       <div className="flex-wrap flex-shrink ml-3 overflow-hidden font-medium line-clamp-1 overflow-ellipsis">

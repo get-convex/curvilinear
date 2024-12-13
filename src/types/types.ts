@@ -17,7 +17,6 @@ export type Issue = {
   status: (typeof Status)[keyof typeof Status];
   modified: number;
   created: number;
-  kanbanorder: string;
   username: string;
 };
 

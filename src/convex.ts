@@ -16,7 +16,6 @@ import {
   changePriority,
   changeTitle,
   changeDescription,
-  changeKanbanOrder,
   deleteIssue,
   postComment,
 } from "./local/mutations";
@@ -34,10 +33,10 @@ mutationRegistry
   .register(changePriority)
   .register(changeTitle)
   .register(changeDescription)
-  .register(changeKanbanOrder)
   .register(deleteIssue)
   .register(postComment);
 
+console.log("Creating persistence!");
 const persistence = new IndexedDbPersistence("curvilinear");
 const logger = new Logger();
 const mutationMap = mutationRegistry.exportToMutationMap();

@@ -9,6 +9,7 @@ export const createIssue = factory.defineLocalMutation(
     ctx.localDb.insert("issues", args.id, args);
   },
 );
+
 export const changeStatus = factory.defineLocalMutation(
   api.issues.changeStatus,
   (ctx, args: FunctionArgs<typeof api.issues.changeStatus>) => {
@@ -36,6 +37,7 @@ export const changePriority = factory.defineLocalMutation(
     });
   },
 );
+
 export const changeTitle = factory.defineLocalMutation(
   api.issues.changeTitle,
   (ctx, args: FunctionArgs<typeof api.issues.changeTitle>) => {
@@ -49,6 +51,7 @@ export const changeTitle = factory.defineLocalMutation(
     });
   },
 );
+
 export const changeDescription = factory.defineLocalMutation(
   api.issues.changeDescription,
   (ctx, args: FunctionArgs<typeof api.issues.changeDescription>) => {
@@ -62,26 +65,14 @@ export const changeDescription = factory.defineLocalMutation(
     });
   },
 );
-export const changeKanbanOrder = factory.defineLocalMutation(
-  api.issues.changeKanbanOrder,
-  (ctx, args: FunctionArgs<typeof api.issues.changeKanbanOrder>) => {
-    const issue = getIssueById.handler(ctx, { id: args.id });
-    if (!issue) {
-      throw new Error("Issue not found");
-    }
-    ctx.localDb.replace("issues", args.id, {
-      ...issue,
-      status: args.status,
-      kanbanorder: args.kanbanorder,
-    });
-  },
-);
+
 export const deleteIssue = factory.defineLocalMutation(
   api.issues.deleteIssue,
   (ctx, args: FunctionArgs<typeof api.issues.deleteIssue>) => {
     ctx.localDb.delete("issues", args.id);
   },
 );
+
 export const postComment = factory.defineLocalMutation(
   api.comments.postComment,
   (ctx, args: FunctionArgs<typeof api.comments.postComment>) => {

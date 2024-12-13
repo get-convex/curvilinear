@@ -10,7 +10,6 @@ export const createIssue = mutation({
     status: v.string(),
     modified: v.number(),
     created: v.number(),
-    kanbanorder: v.string(),
     username: v.string(),
   },
   handler: async (ctx, args) => {
@@ -89,26 +88,6 @@ export const changeDescription = mutation({
     const issue = await getIssue(ctx.db, args.id);
     return ctx.db.patch(issue._id, {
       description: args.description,
-      modified: Date.now(),
-    });
-  },
-});
-
-export const changeKanbanOrder = mutation({
-  args: {
-    id: v.string(),
-    status: v.string(),
-    kanbanorder: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not logged in.");
-    }
-    const issue = await getIssue(ctx.db, args.id);
-    return ctx.db.patch(issue._id, {
-      status: args.status,
-      kanbanorder: args.kanbanorder,
       modified: Date.now(),
     });
   },

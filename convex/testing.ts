@@ -104,7 +104,6 @@ export const generateIssue = action({
       status: issue.status,
       modified: Date.now(),
       created: Date.now(),
-      kanbanorder: "",
       username: user,
     });
 
@@ -169,7 +168,6 @@ export const insertIssue = internalMutation({
     status: v.string(),
     modified: v.number(),
     created: v.number(),
-    kanbanorder: v.string(),
     username: v.string(),
   },
   handler: async (ctx, args) => {

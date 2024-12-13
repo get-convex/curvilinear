@@ -14,7 +14,6 @@ export const sync = defineSchema({
     status: v.string(),
     modified: v.number(),
     created: v.number(),
-    kanbanorder: v.string(),
     username: v.string(),
   }).index("by_issue_id", ["id"]),
 
