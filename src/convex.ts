@@ -23,7 +23,7 @@ import {
 export const clerkPubKey =
   "pk_test_c3BlY2lhbC1tYWNrZXJlbC04Ni5jbGVyay5hY2NvdW50cy5kZXYk";
 export const convex = new ConvexReactClient(
-  import.meta.env.VITE_CONVEX_URL as string,
+  import.meta.env.VITE_CONVEX_URL as string
 );
 
 const mutationRegistry = new MutationRegistry(syncSchema);
@@ -37,7 +37,7 @@ mutationRegistry
   .register(postComment);
 
 console.log("Creating persistence!");
-const persistence = new IndexedDbPersistence("curvilinear");
+const persistence = undefined; // TODO(sarah) why was this not working? new IndexedDbPersistence("curvilinear");
 const logger = new Logger();
 const mutationMap = mutationRegistry.exportToMutationMap();
 const coreLocalStore = new CoreSyncEngine(syncSchema, mutationMap, logger);

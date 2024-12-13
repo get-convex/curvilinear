@@ -16,10 +16,13 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ClerkProvider publishableKey={clerkPubKey}>
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <LocalStoreProvider localStoreClient={localStore}>
+        <LocalStoreProvider
+          localStoreClient={localStore}
+          // persistence={persistence}
+        >
           <App />
         </LocalStoreProvider>
       </ConvexProviderWithClerk>
     </ClerkProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

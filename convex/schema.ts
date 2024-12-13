@@ -19,5 +19,7 @@ export default defineSchema({
     username: v.string(),
     issue_id: v.string(),
     created_at: v.number(),
-  }).index("by_issue_id", ["issue_id", "created_at"]),
+  })
+    .index("by_issue_id", ["issue_id", "created_at"])
+    .index("by_comment_id", ["id"]),
 });

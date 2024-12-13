@@ -9,7 +9,7 @@ import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
 import { loadComments } from "@/local/queries";
 import { useLocalQuery } from "local-store/react/hooks";
 import { useUser } from "@clerk/clerk-react";
-import { postComment } from "@/local/mutations";
+import { postComment, deleteComment } from "@/local/mutations";
 
 export interface CommentsProps {
   issue: Issue;
@@ -44,6 +44,16 @@ function Comments(commentProps: CommentsProps) {
           </div>
           <div className="mt-2 text-md prose w-full max-w-full">
             <ReactMarkdown>{comment.body}</ReactMarkdown>
+          </div>
+          <div className="flex items-center">
+            <button
+              className="text-sm text-gray-400"
+              onClick={() => {
+                void client.mutation(deleteComment, { id: comment.id });
+              }}
+            >
+              Delete
+            </button>
           </div>
         </div>
       ));
