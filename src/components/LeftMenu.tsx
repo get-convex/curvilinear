@@ -7,7 +7,6 @@ import classnames from "classnames";
 import { memo, RefObject, useRef, useState, useContext } from "react";
 import { BsPencilSquare as AddIcon } from "react-icons/bs";
 import { BsSearch as SearchIcon } from "react-icons/bs";
-import { BsFillGrid3X3GapFill as BoardIcon } from "react-icons/bs";
 import { BsCollectionFill as IssuesIcon } from "react-icons/bs";
 import { MdKeyboardArrowDown as ExpandMore } from "react-icons/md";
 import { Link } from "react-router-dom";

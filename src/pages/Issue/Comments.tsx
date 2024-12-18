@@ -22,7 +22,6 @@ function Comments(commentProps: CommentsProps) {
   const comments: Comment[] | undefined = useLocalQuery(loadComments, {
     issue_id: commentProps.issue.id,
   });
-  console.log("comments", comments);
 
   const client = useLocalStoreClient();
 

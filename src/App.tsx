@@ -67,13 +67,8 @@ const App = () => {
 
   return (
     <main>
-      <Authenticated>
-        <MenuContext.Provider value={{ showMenu, setShowMenu }}>
-          <RouterProvider router={router} />
-        </MenuContext.Provider>
-      </Authenticated>
-      <Unauthenticated>
-        <div className="flex justify-center">
+      <div className="flex justify-center">
+        <Unauthenticated>
           <SignInButton mode="modal">
             <button
               className="inline-flex items-center h-6 text-gray-500 border-none rounded bg-gray-100 hover:bg-gray-200"
@@ -82,8 +77,11 @@ const App = () => {
               Sign in
             </button>
           </SignInButton>
-        </div>
-      </Unauthenticated>
+        </Unauthenticated>
+      </div>
+      <MenuContext.Provider value={{ showMenu, setShowMenu }}>
+        <RouterProvider router={router} />
+      </MenuContext.Provider>
     </main>
   );
 };

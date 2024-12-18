@@ -2,10 +2,7 @@ import { sync as syncSchema } from "../convex/sync/schema";
 import { ConvexReactClient } from "convex/react";
 import { CoreSyncEngine } from "local-store/browser/core/core";
 import { Driver } from "local-store/browser/driver";
-import {
-  IndexedDbPersistence,
-  NoopLocalPersistence,
-} from "local-store/browser/localPersistence";
+import { Election } from "local-store/browser/worker/election";
 import { Logger } from "local-store/browser/logger";
 import { NetworkImpl } from "local-store/browser/network";
 import { LocalStoreClient } from "local-store/browser/ui";
@@ -36,15 +33,17 @@ mutationRegistry
   .register(deleteIssue)
   .register(postComment);
 
-console.log("Creating persistence!");
-const persistence = new IndexedDbPersistence("curvilinear");
+const election = new Election(
+  "curvilinear",
+  import.meta.env.VITE_CONVEX_URL as string,
+);
 const logger = new Logger();
 const mutationMap = mutationRegistry.exportToMutationMap();
 const coreLocalStore = new CoreSyncEngine(syncSchema, mutationMap, logger);
 const driver = new Driver({
   coreLocalStore,
   network: new NetworkImpl({ convexClient: (convex as any).sync }),
-  localPersistence: persistence ?? new NoopLocalPersistence(),
+  localPersistence: election,
   logger,
 });
 export const localStore = new LocalStoreClient({

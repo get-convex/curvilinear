@@ -45,7 +45,6 @@ function IssuePage() {
   } else {
     lastIssue.current = issue;
   }
-  console.log("issue", issue, issues);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
