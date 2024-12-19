@@ -15,12 +15,11 @@ import AboutModal from "./AboutModal";
 import IssueModal from "./IssueModal";
 import ItemGroup from "./ItemGroup";
 import ProfileMenu from "./ProfileMenu";
-import { useUser } from "@clerk/clerk-react";
 import DebugModal from "./DebugModal";
+import { useCachedUser } from "@/hooks/useUser";
 
 function LeftMenu() {
-  const { user } = useUser();
-  console.log("user", user);
+  const user = useCachedUser();
   const ref = useRef<HTMLDivElement>() as RefObject<HTMLDivElement>;
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);

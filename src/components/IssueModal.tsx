@@ -14,10 +14,8 @@ import StatusMenu from "./contextmenu/StatusMenu";
 import { Priority, Status, PriorityDisplay } from "../types/types";
 import { showInfo, showWarning } from "../utils/notification";
 import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
-import { useLocalQuery } from "local-store/react/hooks";
-import { loadAllIssues } from "@/local/queries";
-import { useUser } from "@clerk/clerk-react";
 import { createIssue } from "@/local/mutations";
+import { useCachedUser } from "@/hooks/useUser";
 
 interface Props {
   isOpen: boolean;
@@ -31,9 +29,8 @@ function IssueModal({ isOpen, onDismiss }: Props) {
   const [priority, setPriority] = useState(Priority.NONE);
   const [status, setStatus] = useState(Status.BACKLOG);
 
-  const issues = useLocalQuery(loadAllIssues, {}) ?? [];
   const client = useLocalStoreClient();
-  const { user } = useUser();
+  const user = useCachedUser();
 
   const handleSubmit = async () => {
     if (title === "") {

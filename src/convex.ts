@@ -16,6 +16,7 @@ import {
   deleteIssue,
   postComment,
 } from "./local/mutations";
+import { LocalPersistence, NoopLocalPersistence } from "local-store/browser/localPersistence";
 
 export const clerkPubKey =
   "pk_test_c3BlY2lhbC1tYWNrZXJlbC04Ni5jbGVyay5hY2NvdW50cy5kZXYk";
@@ -33,17 +34,22 @@ mutationRegistry
   .register(deleteIssue)
   .register(postComment);
 
-const election = new Election(
-  "curvilinear",
-  import.meta.env.VITE_CONVEX_URL as string,
-);
+let localPersistence: LocalPersistence;
+if (!!import.meta.env.VITE_DISABLE_INDEXED_DB) {
+  localPersistence = new NoopLocalPersistence();
+} else {
+  localPersistence = new Election(
+    "curvilinear",
+    import.meta.env.VITE_CONVEX_URL as string,
+  );
+}
 const logger = new Logger();
 const mutationMap = mutationRegistry.exportToMutationMap();
 const coreLocalStore = new CoreSyncEngine(syncSchema, mutationMap, logger);
 const driver = new Driver({
   coreLocalStore,
   network: new NetworkImpl({ convexClient: (convex as any).sync }),
-  localPersistence: election,
+  localPersistence,
   logger,
 });
 export const localStore = new LocalStoreClient({

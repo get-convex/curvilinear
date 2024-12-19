@@ -8,8 +8,8 @@ import { Comment, Issue } from "../../types/types";
 import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
 import { loadComments } from "@/local/queries";
 import { useLocalQuery } from "local-store/react/hooks";
-import { useUser } from "@clerk/clerk-react";
 import { postComment } from "@/local/mutations";
+import { useCachedUser } from "@/hooks/useUser";
 
 export interface CommentsProps {
   issue: Issue;
@@ -17,7 +17,7 @@ export interface CommentsProps {
 
 function Comments(commentProps: CommentsProps) {
   const [newCommentBody, setNewCommentBody] = useState<string>(``);
-  const { user } = useUser();
+  const user = useCachedUser();
 
   const comments: Comment[] | undefined = useLocalQuery(loadComments, {
     issue_id: commentProps.issue.id,

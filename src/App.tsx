@@ -1,5 +1,5 @@
 import { SignInButton } from "@clerk/clerk-react";
-import { Authenticated, Unauthenticated } from "convex/react";
+import { Unauthenticated } from "convex/react";
 import "animate.css/animate.min.css";
 import { useState, createContext } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -9,6 +9,7 @@ import Root from "./pages/root";
 import Issue from "./pages/Issue";
 import { localStore } from "./convex";
 import { preload } from "./local/queries";
+import { useCachedUser } from "./hooks/useUser";
 
 interface MenuContextInterface {
   showMenu: boolean;
@@ -64,7 +65,8 @@ const router = createBrowserRouter([
 
 const App = () => {
   const [showMenu, setShowMenu] = useState(false);
-
+  // Prepopulate the user in local storage if the user is signed in.
+  useCachedUser();
   return (
     <main>
       <div className="flex justify-center">
