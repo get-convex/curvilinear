@@ -1,11 +1,5 @@
 import { sync as syncSchema } from "../convex/sync/schema";
 import { ConvexReactClient } from "convex/react";
-import { CoreSyncEngine } from "local-store/browser/core/core";
-import { Driver } from "local-store/browser/driver";
-import { Election } from "local-store/browser/worker/election";
-import { Logger } from "local-store/browser/logger";
-import { NetworkImpl } from "local-store/browser/network";
-import { LocalStoreClient } from "local-store/browser/ui";
 import { MutationRegistry } from "local-store/react/mutationRegistry";
 import {
   createIssue,
@@ -16,13 +10,11 @@ import {
   deleteIssue,
   postComment,
 } from "./local/mutations";
-import { LocalPersistence, NoopLocalPersistence } from "local-store/browser/localPersistence";
+import { createLocalStoreClient } from "local-store/react/LocalStoreProvider";
 
 export const clerkPubKey =
   "pk_test_c3BlY2lhbC1tYWNrZXJlbC04Ni5jbGVyay5hY2NvdW50cy5kZXYk";
-export const convex = new ConvexReactClient(
-  import.meta.env.VITE_CONVEX_URL as string,
-);
+export const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL);
 
 const mutationRegistry = new MutationRegistry(syncSchema);
 mutationRegistry
@@ -34,26 +26,13 @@ mutationRegistry
   .register(deleteIssue)
   .register(postComment);
 
-let localPersistence: LocalPersistence;
-if (!!import.meta.env.VITE_DISABLE_INDEXED_DB) {
-  localPersistence = new NoopLocalPersistence();
-} else {
-  localPersistence = new Election(
-    "curvilinear",
-    import.meta.env.VITE_CONVEX_URL as string,
-  );
-}
-const logger = new Logger();
-const mutationMap = mutationRegistry.exportToMutationMap();
-const coreLocalStore = new CoreSyncEngine(syncSchema, mutationMap, logger);
-const driver = new Driver({
-  coreLocalStore,
-  network: new NetworkImpl({ convexClient: (convex as any).sync }),
-  localPersistence,
-  logger,
-});
-export const localStore = new LocalStoreClient({
-  driver,
+export const localStore = createLocalStoreClient({
   syncSchema,
-  mutations: mutationMap,
+  mutationRegistry,
+  convexClient: convex,
+  convexUrl: import.meta.env.VITE_CONVEX_URL,
+  persistenceKey:
+    import.meta.env.VITE_DISABLE_INDEXED_DB !== undefined
+      ? null
+      : "curvilinear",
 });
