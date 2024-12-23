@@ -10,7 +10,7 @@ import NoPriorityIconImg from "../assets/icons/dots.svg";
 import UrgentPriorityIconImg from "../assets/icons/rounded-claim.svg";
 
 export type Issue = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   priority: (typeof Priority)[keyof typeof Priority];

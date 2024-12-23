@@ -11,7 +11,9 @@ export default defineSchema({
     modified: v.number(),
     created: v.number(),
     username: v.string(),
-  }).index("by_issue_id", ["id"]),
+  })
+    .index("by_issue_id", ["id"])
+    .index("by_created", ["created"]),
 
   comments: defineTable({
     id: v.string(),
