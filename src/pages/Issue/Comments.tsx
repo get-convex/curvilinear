@@ -20,7 +20,7 @@ function Comments(commentProps: CommentsProps) {
   const user = useCachedUser();
 
   const comments: Comment[] | undefined = useLocalQuery(loadComments, {
-    issue_id: commentProps.issue.id,
+    issue_id: commentProps.issue._id,
   });
 
   const client = useLocalStoreClient();
@@ -54,7 +54,7 @@ function Comments(commentProps: CommentsProps) {
     if (!newCommentBody) {
       showWarning(
         `Please enter a comment before submitting`,
-        `Comment required`,
+        `Comment required`
       );
       return;
     }

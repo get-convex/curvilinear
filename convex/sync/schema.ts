@@ -7,7 +7,6 @@ import schema from "../schema";
 
 export const sync = defineSchema({
   issues: defineTable({
-    id: v.string(),
     title: v.string(),
     description: v.string(),
     priority: v.string(),
@@ -15,7 +14,7 @@ export const sync = defineSchema({
     modified: v.number(),
     created: v.number(),
     username: v.string(),
-  }).index("by_issue_id", ["id"]),
+  }).index("by_creation_time", ["created"]),
 
   comments: defineTable({
     id: v.string(),
@@ -26,5 +25,7 @@ export const sync = defineSchema({
   }).index("by_issue_id", ["issue_id", "created_at"]),
 });
 
+// @ts-expect-error ugh SchemaDefinition has private readonly field that causes a type error
 export const s = tableResolverFactory(sync, schema);
+// @ts-expect-error ugh SchemaDefinition has private readonly field that causes a type error
 export const streamQuery = streamQueryForServerSchema(schema);

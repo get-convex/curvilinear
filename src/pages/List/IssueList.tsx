@@ -40,9 +40,9 @@ const VirtualIssueRow = memo(
     style: CSSProperties;
   }) => {
     const issue = issues[index];
-    return <IssueRow key={`issue-${issue.id}`} issue={issue} style={style} />;
+    return <IssueRow key={`issue-${issue._id}`} issue={issue} style={style} />;
   },
-  areEqual,
+  areEqual
 );
 
 export default IssueList;

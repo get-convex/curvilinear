@@ -1,6 +1,7 @@
 import { factory } from "./types";
 
 export const preload = factory.defineLocalQuery((ctx) => {
+  return [];
   const issues = ctx.localDb.query("issues").withIndex("by_issue_id").collect();
   const allComments = [];
   for (const issue of issues) {
@@ -18,24 +19,20 @@ export const preload = factory.defineLocalQuery((ctx) => {
     length += JSON.stringify(comment).length;
   }
   console.log(
-    `Preloaded ${issues.length} issues and ${allComments.length} comments (${(length / 1024).toFixed(2)}KB).`,
+    `Preloaded ${issues.length} issues and ${allComments.length} comments (${(length / 1024).toFixed(2)}KB).`
   );
   return [];
 }, "preload");
 
 export const loadAllIssues = factory.defineLocalQuery((ctx) => {
-  return ctx.localDb.query("issues").withIndex("by_issue_id").collect();
+  return ctx.localDb.query("issues").withIndex("by_creation_time").collect();
 }, "loadAllIssues");
 
 export const getIssueById = factory.defineLocalQuery(
   (ctx, args: { id: string }) => {
-    // XXX: `.eq()` type expectes undefined.
-    return ctx.localDb
-      .query("issues")
-      .withIndex("by_issue_id", (q) => q.eq("id", args.id as any))
-      .unique();
+    return ctx.localDb.get("issues", args.id as any);
   },
-  "getIssueById",
+  "getIssueById"
 );
 
 export const loadComments = factory.defineLocalQuery(
@@ -45,5 +42,5 @@ export const loadComments = factory.defineLocalQuery(
       .withIndex("by_issue_id", (q: any) => q.eq("issue_id", args.issue_id))
       .collect();
   },
-  "loadComments",
+  "loadComments"
 );

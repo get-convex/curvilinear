@@ -22,7 +22,7 @@ function IssueRow({ issue, style }: Props) {
 
   const handleChangeStatus = async (status: string) => {
     const args = {
-      id: issue.id,
+      id: issue._id,
       status,
     };
     await client.mutation(changeStatus, args);
@@ -30,7 +30,7 @@ function IssueRow({ issue, style }: Props) {
 
   const handleChangePriority = async (priority: string) => {
     const args = {
-      id: issue.id,
+      id: issue._id,
       priority,
     };
     await client.mutation(changePriority, args);
@@ -38,22 +38,22 @@ function IssueRow({ issue, style }: Props) {
 
   return (
     <div
-      key={issue.id}
+      key={issue._id}
       className="flex items-center flex-grow w-full min-w-0 pl-2 pr-8 text-sm border-b border-gray-100 hover:bg-gray-100 h-11 shrink-0"
-      id={issue.id}
-      onClick={() => navigate(`/issue/${issue.id}`)}
+      id={issue._id}
+      onClick={() => navigate(`/issue/${issue._id}`)}
       style={style}
     >
       <div className="flex-shrink-0 ml-4">
         <PriorityMenu
-          id={`r-priority-` + issue.id}
+          id={`r-priority-` + issue._id}
           button={<PriorityIcon priority={issue.priority} />}
           onSelect={handleChangePriority}
         />
       </div>
       <div className="flex-shrink-0 ml-3">
         <StatusMenu
-          id={`r-status-` + issue.id}
+          id={`r-status-` + issue._id}
           button={<StatusIcon status={issue.status} />}
           onSelect={handleChangeStatus as any}
         />

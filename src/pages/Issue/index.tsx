@@ -13,7 +13,7 @@ import DeleteModal from "./DeleteModal";
 import Comments from "./Comments";
 import debounce from "lodash.debounce";
 import { useLocalStoreClient } from "local-store/react/LocalStoreProvider";
-import { loadAllIssues } from "@/local/queries";
+import { getIssueById } from "@/local/queries";
 import { useLocalQuery } from "local-store/react/hooks";
 import {
   changeDescription,
@@ -29,22 +29,12 @@ const debounceTime = 500;
 function IssuePage() {
   const navigate = useNavigate();
   const client = useLocalStoreClient();
-  const issues: Issue[] | undefined = useLocalQuery(
-    loadAllIssues,
-    {},
-    "loadAllIssues",
-  );
   const params = useParams();
-
-  let issue = issues?.find((i) => i.id === params.id);
-
-  // XXX: Remove this hack once we fix updates & deletes.
-  const lastIssue = useRef(issue);
-  if (!issue) {
-    issue = lastIssue.current;
-  } else {
-    lastIssue.current = issue;
-  }
+  const issue: Issue | null | undefined = useLocalQuery(
+    getIssueById,
+    { id: params.id! },
+    "getIssueById"
+  );
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -53,9 +43,9 @@ function IssuePage() {
   const [dirtyDescription, setDirtyDescription] = useState<string | null>(null);
   const descriptionIsDirty = useRef(false);
 
-  if (issues === undefined) {
+  if (issue === undefined) {
     return <div className="p-8 w-full text-center">Loading...</div>;
-  } else if (!issue) {
+  } else if (issue === null) {
     return <div className="p-8 w-full text-center">Issue not found</div>;
   }
 
@@ -72,7 +62,7 @@ function IssuePage() {
 
   const handleStatusChange = async (status: any) => {
     const args = {
-      id: issue.id,
+      id: issue._id,
       status,
     };
     await client.mutation(changeStatus, args);
@@ -80,7 +70,7 @@ function IssuePage() {
 
   const handlePriorityChange = async (priority: string) => {
     const args = {
-      id: issue.id,
+      id: issue._id,
       priority,
     };
     await client.mutation(changePriority, args);
@@ -88,7 +78,7 @@ function IssuePage() {
 
   const handleTitleChangeDebounced = debounce(async (title: string) => {
     const args = {
-      id: issue.id,
+      id: issue._id,
       title,
     };
     await client.mutation(changeTitle, args);
@@ -104,12 +94,12 @@ function IssuePage() {
   const handleDescriptionChangeDebounced = debounce(
     async (description: string) => {
       const args = {
-        id: issue.id,
+        id: issue._id,
         description,
       };
       await client.mutation(changeDescription, args);
     },
-    debounceTime,
+    debounceTime
   );
 
   const handleDescriptionChange = (description: string) => {
@@ -121,7 +111,7 @@ function IssuePage() {
 
   const handleDelete = async () => {
     const args = {
-      id: issue.id,
+      id: issue._id,
     };
     const promise = client.mutation(deleteIssue, args);
     handleClose();
@@ -136,10 +126,11 @@ function IssuePage() {
   };
 
   const shortId = () => {
-    if (issue.id.includes(`-`)) {
-      return issue.id.slice(issue.id.length - 8);
+    console.log(issue);
+    if (issue._id.includes(`-`)) {
+      return issue._id.slice(issue._id.length - 8);
     } else {
-      return issue.id;
+      return issue._id;
     }
   };
 
