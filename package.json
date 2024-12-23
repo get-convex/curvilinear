@@ -30,7 +30,7 @@
     "animate.css": "^4.1.1",
     "classnames": "^2.5.1",
     "clsx": "^2.0.0",
-    "convex": "file:../convex/npm-packages/convex",
+    "convex": "^1.17.5-alpha.0",
     "convex-helpers": "^0.1.64-alpha.2",
     "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
