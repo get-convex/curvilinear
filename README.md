@@ -11,8 +11,8 @@ cd curvilinear
 npm run dev
 ```
 
-Note that you can can then either [use a local dev server](https://stack.convex.dev/anonymous-development) without signing up for a Convex account or use a managed
-cloud deployment.
+Note that you can either [use a local dev server](https://stack.convex.dev/anonymous-development) without signing up for a Convex account or use a managed
+cloud deployment for running the backend.
 
 ## App
 
