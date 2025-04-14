@@ -1,6 +1,6 @@
 # Convex local sync + Linear clone
 
-This repo is an alpha of the offline sync engine for Convex.
+This repo is an alpha of the offline sync engine for Convex. See a deployed version of the demo [here](https://linear-convex.vercel.app/).
 
 ## Installation
 This monorepo depends on [PNPM](https://pnpm.io/installation) for package management.
